@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+aiomysql
+python-dotenv
+bcrypt
+pyjwt
+cryptography
+slowapi
+sentry-sdk
+prometheus-client

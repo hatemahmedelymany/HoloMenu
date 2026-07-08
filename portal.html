@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoloMenu — System Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #07090e;
+            --panel: rgba(14, 20, 32, 0.8);
+            --blue: #00f0ff;
+            --green: #00e676;
+            --orange: #ff9800;
+            --pink: #ff1744;
+            --gold: #ffd740;
+            --purple: #b388ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated grid background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glowing orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.2;
+            pointer-events: none;
+            z-index: 0;
+            animation: orb-drift 12s ease-in-out infinite alternate;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--blue);
+            top: -150px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--purple);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: 4s;
+        }
+
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: var(--gold);
+            top: 40%;
+            left: 40%;
+            animation-delay: 2s;
+            opacity: 0.1;
+        }
+
+        @keyframes orb-drift {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(30px, 30px);
+            }
+        }
+
+        .portal-wrap {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 60px 30px 40px;
+            gap: 50px;
+        }
+
+        /* Header */
+        .portal-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .portal-logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+
+        .portal-logo span {
+            background: linear-gradient(135deg, var(--gold), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .portal-tagline {
+            font-size: 0.9rem;
+            color: #718096;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* System status bar */
+        .system-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 12px 28px;
+            font-size: 0.85rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ff1744;
+            box-shadow: 0 0 8px rgba(255, 23, 68, 0.6);
+            transition: all 0.3s;
+        }
+
+        .status-dot.online {
+            background: var(--green);
+            box-shadow: 0 0 8px rgba(0, 230, 118, 0.6);
+        }
+
+        .status-dot.pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .status-label {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-val {
+            color: #a0aec0;
+        }
+
+        .status-sep {
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Nav cards grid */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            width: 100%;
+            max-width: 960px;
+        }
+
+        /* Primary action: kiosk is wide */
+        .nav-grid .card-kiosk {
+            grid-column: 1 / -1;
+        }
+
+        .nav-card {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 28px 32px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            background: var(--panel);
+            backdrop-filter: blur(12px);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Color accents per card */
+        .card-kiosk {
+            --accent: var(--blue);
+        }
+
+        .card-chef {
+            --accent: var(--orange);
+        }
+
+        .card-cashier {
+            --accent: var(--green);
+        }
+
+        .card-admin {
+            --accent: var(--purple);
+        }
+
+        .nav-card::before {
+            background: radial-gradient(circle at 20% 50%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 70%);
+        }
+
+        .card-icon-wrap {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            background: color-mix(in srgb, var(--accent) 12%, transparent);
+            border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+            transition: all 0.25s;
+        }
+
+        .nav-card:hover .card-icon-wrap {
+            background: color-mix(in srgb, var(--accent) 20%, transparent);
+            box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 30%, transparent);
+        }
+
+        .card-body {
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        .card-badge-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .card-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: color-mix(in srgb, var(--accent) 12%, transparent);
+            border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+            color: var(--accent);
+        }
+
+        .card-badge.live {
+            animation: pulse 1.5s infinite;
+        }
+
+        .card-arrow {
+            font-size: 1.5rem;
+            color: color-mix(in srgb, var(--accent) 40%, transparent);
+            transition: all 0.25s;
+        }
+
+        .nav-card:hover .card-arrow {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        /* Live stat pills on kiosk card */
+        .live-stats {
+            display: flex;
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .live-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .live-stat-val {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .live-stat-label {
+            font-size: 0.7rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        .portal-footer {
+            font-size: 0.75rem;
+            color: #4a5568;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="portal-wrap">
+
+        <!-- Header -->
+        <header class="portal-header">
+            <h1 class="portal-logo">Holo<span>Menu</span></h1>
+            <p class="portal-tagline">Gesture Kiosk System Portal</p>
+        </header>
+
+        <!-- System Status Bar -->
+        <div class="system-status-bar">
+            <div class="status-indicator">
+                <div class="status-dot" id="sys-dot"></div>
+                <span class="status-label" id="sys-label">Checking…</span>
+            </div>
+            <span class="status-sep">|</span>
+            <span class="status-val">🍳 Cooking: <strong id="stat-cooking">—</strong></span>
+            <span class="status-sep">|</span>
+            <span class="status-val">✅ Ready: <strong id="stat-ready">—</strong></span>
+            <span class="status-sep">|</span>
+            <span class="status-val">💰 Completed Today: <strong id="stat-done">—</strong></span>
+        </div>
+
+        <!-- Navigation Cards -->
+        <div class="nav-grid">
+
+            <!-- Kiosk: full-width -->
+            <a href="index.html" class="nav-card card-kiosk">
+                <div class="card-icon-wrap">📺</div>
+                <div class="card-body">
+                    <div class="card-title">Kiosk / Customer Display</div>
+                    <div class="card-desc">Gesture-controlled self-order holographic display for customers. Swipe,
+                        pinch, and thumbs-up to navigate the menu and build an order.</div>
+                    <div class="live-stats">
+                        <div class="live-stat">
+                            <span class="live-stat-val" id="portal-active">—</span>
+                            <span class="live-stat-label">Active Orders</span>
+                        </div>
+                        <div class="live-stat">
+                            <span class="live-stat-val" id="portal-confirmed">—</span>
+                            <span class="live-stat-label">Confirmed</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="card-arrow">→</span>
+            </a>
+
+            <!-- Chef -->
+            <a href="chef.html" class="nav-card card-chef">
+                <div class="card-icon-wrap">👨‍🍳</div>
+                <div class="card-body">
+                    <div class="card-title">Chef Kitchen Display</div>
+                    <div class="card-desc">Real-time order queue for the kitchen team. Move orders through Confirmed →
+                        Cooking → Ready with one click.</div>
+                    <div class="card-badge-row">
+                        <span class="card-badge live" id="chef-badge-portal">— In Kitchen</span>
+                    </div>
+                </div>
+                <span class="card-arrow">→</span>
+            </a>
+
+            <!-- Cashier -->
+            <a href="cashier.html" class="nav-card card-cashier">
+                <div class="card-icon-wrap">💳</div>
+                <div class="card-body">
+                    <div class="card-title">Cashier Terminal</div>
+                    <div class="card-desc">Payment processing station. View ready orders, select a payment method,
+                        calculate cash change, and close orders.</div>
+                    <div class="card-badge-row">
+                        <span class="card-badge live" id="cashier-badge-portal">— Awaiting Payment</span>
+                    </div>
+                </div>
+                <span class="card-arrow">→</span>
+            </a>
+
+            <!-- Admin (full-width bottom) -->
+            <a href="admin.html" class="nav-card card-admin" style="grid-column: 1 / -1;">
+                <div class="card-icon-wrap">⚙️</div>
+                <div class="card-body">
+                    <div class="card-title">Admin Suite</div>
+                    <div class="card-desc">Full system control: manage product catalog, department visibility, browse
+                        order history, and view sales analytics.</div>
+                    <div class="card-badge-row">
+                        <span class="card-badge">Products</span>
+                        <span class="card-badge">Departments</span>
+                        <span class="card-badge">Order Audit</span>
+                        <span class="card-badge">Revenue Stats</span>
+                    </div>
+                </div>
+                <span class="card-arrow">→</span>
+            </a>
+
+        </div>
+
+        <footer class="portal-footer">HoloMenu System v2.0 &nbsp;·&nbsp; All Stations Connected</footer>
+    </div>
+
+    <script>
+        const API = 'http://127.0.0.1:8081/api';
+
+        async function fetchStatus() {
+            try {
+                const res = await fetch(`${API}/health`);
+                if (!res.ok) throw new Error('offline');
+                const data = await res.json();
+
+                // Status row
+                document.getElementById('sys-dot').classList.add('online', 'pulse');
+                document.getElementById('sys-label').textContent = 'System Online';
+
+                const c = data.status_counts || {};
+                document.getElementById('stat-cooking').textContent = c.cooking || 0;
+                document.getElementById('stat-ready').textContent = c.ready || 0;
+                document.getElementById('stat-done').textContent = c.completed || 0;
+
+                // Kiosk live counts
+                const active = (c.in_progress || 0) + (c.confirmed || 0);
+                document.getElementById('portal-active').textContent = active;
+                document.getElementById('portal-confirmed').textContent = c.confirmed || 0;
+
+                // Chef badge
+                const chefCount = (c.confirmed || 0) + (c.cooking || 0);
+                document.getElementById('chef-badge-portal').textContent =
+                    `${chefCount} In Kitchen`;
+
+                // Cashier badge
+                const cashierCount = c.ready || 0;
+                document.getElementById('cashier-badge-portal').textContent =
+                    `${cashierCount} Awaiting Payment`;
+
+            } catch (_) {
+                document.getElementById('sys-dot').classList.remove('online');
+                document.getElementById('sys-label').textContent = 'Backend Offline';
+            }
+        }
+
+        fetchStatus();
+        setInterval(fetchStatus, 8000);
+    </script>
+</body>
+
+</html>

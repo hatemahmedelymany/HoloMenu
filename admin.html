@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoloMenu Full Admin Suite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        :root {
+            --bg-dark: #07090e;
+            --bg-panel: rgba(16, 22, 35, 0.7);
+            --border-color: rgba(0, 240, 255, 0.15);
+            --glow-blue: #00f0ff;
+            --glow-green: #00ff66;
+            --glow-orange: #ff9900;
+            --glow-pink: #ff0077;
+            --font-family: 'Outfit', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image:
+                linear-gradient(to right, rgba(0, 240, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            color: #ffffff;
+            font-family: var(--font-family);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-h1 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+        }
+
+        .brand-h1 span {
+            color: var(--glow-blue);
+        }
+
+        .brand-sub {
+            font-size: 0.85rem;
+            color: #718096;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Tab Navbar */
+        .admin-nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e0;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--glow-blue);
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background: rgba(0, 240, 255, 0.06);
+            border-color: var(--glow-blue);
+            color: var(--glow-blue);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+        }
+
+        /* Main Tab Panels Container */
+        .tab-content {
+            display: none;
+            flex: 1;
+        }
+
+        .tab-content.active {
+            display: grid;
+        }
+
+        /* Subgrid templates for panels */
+        #tab-products {
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        #tab-departments {
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+        }
+
+        #tab-orders {
+            grid-template-columns: 1fr;
+        }
+
+        #tab-analytics {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        /* Panels styles */
+        .catalog-panel,
+        .editor-panel,
+        .full-width-panel {
+            background: var(--bg-panel);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 160px);
+        }
+
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--glow-blue);
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* General forms */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #a0aec0;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--glow-blue);
+        }
+
+        .submit-btn {
+            background: var(--glow-blue);
+            color: #000;
+            font-weight: 800;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            box-shadow: 0 0 15px var(--glow-blue);
+            transform: translateY(-1px);
+        }
+
+        .cancel-edit-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        .cancel-edit-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Tables */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 12px 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .admin-table th {
+            background: rgba(255, 255, 255, 0.03);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #a0aec0;
+            letter-spacing: 1px;
+        }
+
+        .admin-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* UI components */
+        .product-info-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .product-names {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .name-en {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .name-ar {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        .price-value {
+            font-weight: 700;
+            color: var(--glow-green);
+        }
+
+        /* Switch toggle styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2d3748;
+            transition: .3s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--glow-green);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(22px);
+        }
+
+        .action-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-link {
+            background: none;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            padding: 0;
+        }
+
+        .link-edit {
+            color: var(--glow-blue);
+        }
+
+        .link-edit:hover {
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+        }
+
+        .link-del {
+            color: var(--glow-pink);
+        }
+
+        .link-del:hover {
+            text-shadow: 0 0 8px rgba(255, 0, 119, 0.4);
+        }
+
+        /* KPI Cards container */
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .kpi-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .kpi-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #a0aec0;
+            letter-spacing: 1px;
+        }
+
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .color-blue {
+            color: var(--glow-blue);
+        }
+
+        .color-green {
+            color: var(--glow-green);
+        }
+
+        .color-orange {
+            color: var(--glow-orange);
+        }
+
+        .color-pink {
+            color: var(--glow-pink);
+        }
+
+        .dept-section h3 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #cbd5e0;
+            border-left: 3px solid var(--glow-blue);
+            padding-left: 10px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        /* Orders detail line items */
+        .audit-items-list {
+            list-style: none;
+            padding: 5px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .audit-item-row {
+            display: flex;
+            justify-content: space-between;
+            color: #a0aec0;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <h1 class="brand-h1">HoloMenu <span>Suite</span></h1>
+            <div class="brand-sub">Kiosk Control, Inventory & Auditing Center</div>
+        </div>
+
+        <!-- Tab navigation -->
+        <nav class="admin-nav">
+            <button class="tab-btn active" onclick="switchTab('products')">Products</button>
+            <button class="tab-btn" onclick="switchTab('departments')">Departments</button>
+            <button class="tab-btn" onclick="switchTab('analytics')">Stats & Charts</button>
+        </nav>
+    </header>
+
+    <!-- ════════════════════════════════════════════════════════════
+       TAB 1: PRODUCTS INVENTORY
+       ════════════════════════════════════════════════════════════ -->
+    <main class="tab-content active" id="tab-products">
+        <!-- Left panel: Catalog lists -->
+        <section class="catalog-panel">
+            <div class="panel-title">Product Inventory</div>
+            <div id="product-catalog-sections">
+                <!-- Rendered dynamically -->
+            </div>
+        </section>
+
+        <!-- Right panel: Product form -->
+        <aside class="editor-panel">
+            <h3 class="panel-title" id="prod-editor-title">Add New Product</h3>
+            <form id="product-form">
+                <input type="hidden" id="edit-product-id" value="">
+
+                <div class="form-group">
+                    <label for="prod-category">Department</label>
+                    <select id="prod-category" required>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-name-en">Name (English)</label>
+                    <input type="text" id="prod-name-en" placeholder="Classic Burger" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-name-ar">Name (Arabic)</label>
+                    <input type="text" id="prod-name-ar" placeholder="برجر كلاسيك" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-price">Price (EGP)</label>
+                    <input type="number" step="0.01" id="prod-price" placeholder="0.00" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-desc-en">Description (English)</label>
+                    <textarea id="prod-desc-en" rows="2" placeholder="Detail description..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-desc-ar">Description (Arabic)</label>
+                    <textarea id="prod-desc-ar" rows="2" placeholder="الوصف بالعربية..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-calories">Calories</label>
+                    <input type="number" id="prod-calories" placeholder="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-img">Image Asset Path</label>
+                    <input type="text" id="prod-img" value="assets/images/burger.png">
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-ingredients">Ingredients (Comma separated)</label>
+                    <input type="text" id="prod-ingredients" placeholder="Beef Patty, Cheese">
+                </div>
+
+                <div class="form-group">
+                    <label for="prod-allergens">Allergens (Comma separated)</label>
+                    <input type="text" id="prod-allergens" placeholder="Gluten, Dairy">
+                </div>
+
+                <button type="submit" class="submit-btn" id="prod-submit-btn">Save Product</button>
+                <button type="button" class="cancel-edit-btn" id="prod-cancel-btn" style="display:none;">Cancel
+                    Edit</button>
+            </form>
+        </aside>
+    </main>
+
+    <!-- ════════════════════════════════════════════════════════════
+       TAB 2: DEPARTMENTS CONTROL
+       ════════════════════════════════════════════════════════════ -->
+    <main class="tab-content" id="tab-departments">
+        <!-- Left panel: Departments list -->
+        <section class="catalog-panel">
+            <div class="panel-title">Kiosk Departments</div>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Name (English)</th>
+                        <th>Name (Arabic)</th>
+                        <th>Display Order</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="dept-table-body">
+                    <!-- Rendered dynamically -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Right panel: Department form -->
+        <aside class="editor-panel">
+            <h3 class="panel-title" id="dept-editor-title">Add Department</h3>
+            <form id="department-form">
+                <input type="hidden" id="edit-dept-id" value="">
+
+                <div class="form-group">
+                    <label for="dept-name-en">Name (English)</label>
+                    <input type="text" id="dept-name-en" placeholder="e.g. Burgers" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dept-name-ar">Name (Arabic)</label>
+                    <input type="text" id="dept-name-ar" placeholder="e.g. برجر" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="dept-order">Display Sequence</label>
+                    <input type="number" id="dept-order" value="0" required>
+                </div>
+
+                <div class="form-group" style="flex-direction:row; align-items:center; gap:10px; margin-top:8px;">
+                    <input type="checkbox" id="dept-active" checked style="width:20px; height:20px;">
+                    <label for="dept-active">Active Visibility</label>
+                </div>
+
+                <button type="submit" class="submit-btn" id="dept-submit-btn">Save Department</button>
+                <button type="button" class="cancel-edit-btn" id="dept-cancel-btn" style="display:none;">Cancel
+                    Edit</button>
+            </form>
+        </aside>
+    </main>
+
+
+
+    <!-- ════════════════════════════════════════════════════════════
+       TAB 4: ANALYTICS REPORT
+       ════════════════════════════════════════════════════════════ -->
+    <main class="tab-content" id="tab-analytics">
+        <!-- Top Row: stats summary KPI boxes -->
+        <div class="kpi-container">
+            <div class="kpi-card">
+                <span class="kpi-label">Completed Revenue</span>
+                <span id="kpi-revenue" class="kpi-value color-green">0.00 EGP</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Average Ticket Size</span>
+                <span id="kpi-avg-ticket" class="kpi-value color-blue">0.00 EGP</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Completed Orders</span>
+                <span id="kpi-completed" class="kpi-value color-green">0</span>
+            </div>
+            <div class="kpi-card">
+                <span class="kpi-label">Cancelled / Incomplete</span>
+                <span id="kpi-cancelled" class="kpi-value color-pink">0</span>
+            </div>
+        </div>
+
+        <!-- Analytics Detail Breakdowns -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:30px;">
+            <!-- Section A: Popular Items -->
+            <section class="catalog-panel" style="max-height: 400px;">
+                <div class="panel-title">Popular Ordered Products</div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Orders Count</th>
+                            <th>Total Qty Sold</th>
+                        </tr>
+                    </thead>
+                    <tbody id="analytics-popular-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section B: Interactions summary events -->
+            <section class="catalog-panel" style="max-height: 400px;">
+                <div class="panel-title">Kiosk Gesture Interactions</div>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Interaction Action</th>
+                            <th>Times Performed</th>
+                        </tr>
+                    </thead>
+                    <tbody id="analytics-events-body">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = 'http://127.0.0.1:8081/api';
+        let departments = [];
+        let products = [];
+        let historicalOrders = [];
+
+        // Switch Tabs controller
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Mark clicked tab as active
+            const clickedBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes(tabId.substr(0, 4)));
+            if (clickedBtn) clickedBtn.classList.add('active');
+
+            const targetContent = document.getElementById(`tab-${tabId}`);
+            if (targetContent) targetContent.classList.add('active');
+
+            // Bootstrapping queries per tab
+            if (tabId === 'products') loadProducts();
+            if (tabId === 'departments') loadDepartmentsList();
+            if (tabId === 'orders') loadOrderHistory();
+            if (tabId === 'analytics') loadAnalyticsStats();
+        }
+
+        async function loadConfig() {
+            try {
+                const resDept = await fetch(`${API_BASE}/departments`);
+                departments = await resDept.json();
+
+                // Populate select list in product editor
+                const select = document.getElementById('prod-category');
+                select.innerHTML = departments.map(d => `<option value="${d.id}">${d.name_en}</option>`).join('');
+            } catch (err) {
+                console.error('API failed to connect during load config:', err);
+            }
+        }
+
+        // --- Tab 1: Products Handler ---
+        async function loadProducts() {
+            const container = document.getElementById('product-catalog-sections');
+            container.innerHTML = '<div>Loading products...</div>';
+            products = [];
+
+            try {
+                let htmlList = '';
+                for (const dept of departments) {
+                    const res = await fetch(`${API_BASE}/departments/${dept.id}/products`);
+                    const items = await res.json();
+                    if (!items || items.length === 0) continue;
+
+                    products.push(...items);
+
+                    let rows = items.map(p => `
+            <tr>
+              <td>
+                <div class="product-info-cell">
+                  <img class="product-img" src="${p.media_path || 'https://picsum.photos/50'}" onerror="this.src='https://picsum.photos/50/50'" />
+                  <div class="product-names">
+                    <span class="name-en">${p.name_en}</span>
+                    <span class="name-ar">${p.name_ar}</span>
+                  </div>
+                </div>
+              </td>
+              <td><span class="price-value">${p.price} EGP</span></td>
+              <td>${p.calories || 0}</td>
+              <td>
+                <label class="switch">
+                  <input type="checkbox" ${p.available ? 'checked' : ''} onchange="toggleProductAvailability(${p.id}, this.checked)">
+                  <span class="slider"></span>
+                </label>
+              </td>
+              <td>
+                <div class="action-links">
+                  <button class="action-link link-edit" onclick="initiateProductEdit(${p.id})">Edit</button>
+                  <button class="action-link link-del" onclick="deleteProduct(${p.id})">Del</button>
+                </div>
+              </td>
+            </tr>
+          `).join('');
+
+                    htmlList += `
+            <div class="dept-section" style="margin-bottom:20px;">
+              <h3>${dept.name_en} (${dept.name_ar})</h3>
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Calories</th>
+                    <th>Available</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          `;
+                }
+                container.innerHTML = htmlList || '<div>No product items in database. Add new ones!</div>';
+            } catch (err) {
+                container.innerHTML = '<div style="color:var(--glow-pink)">Error loading products.</div>';
+            }
+        }
+
+        async function toggleProductAvailability(id, checked) {
+            const prod = products.find(p => p.id === id);
+            if (!prod) return;
+
+            const payload = {
+                department_id: prod.department_id,
+                name_en: prod.name_en,
+                name_ar: prod.name_ar,
+                description_en: prod.description_en,
+                description_ar: prod.description_ar,
+                price: parseFloat(prod.price),
+                currency: prod.currency || 'EGP',
+                ingredients: Array.isArray(prod.ingredients) ? prod.ingredients : [],
+                calories: prod.calories || 0,
+                allergens: Array.isArray(prod.allergens) ? prod.allergens : [],
+                media_type: prod.media_type || 'image',
+                media_path: prod.media_path,
+                thumbnail_path: prod.thumbnail_path,
+                available: checked,
+                featured: prod.featured,
+                qr_order_url: prod.qr_order_url
+            };
+
+            try {
+                await fetch(`${API_BASE}/products/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch (e) { console.error('Failed to toggle product availability:', e); }
+        }
+
+        function initiateProductEdit(id) {
+            const p = products.find(prod => prod.id === id);
+            if (!p) return;
+
+            document.getElementById('edit-product-id').value = p.id;
+            document.getElementById('prod-editor-title').textContent = 'Edit Product';
+            document.getElementById('prod-category').value = p.department_id;
+            document.getElementById('prod-name-en').value = p.name_en;
+            document.getElementById('prod-name-ar').value = p.name_ar;
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-desc-en').value = p.description_en || '';
+            document.getElementById('prod-desc-ar').value = p.description_ar || '';
+            document.getElementById('prod-calories').value = p.calories || 0;
+            document.getElementById('prod-img').value = p.media_path || '';
+            document.getElementById('prod-ingredients').value = Array.isArray(p.ingredients) ? p.ingredients.join(', ') : '';
+            document.getElementById('prod-allergens').value = Array.isArray(p.allergens) ? p.allergens.join(', ') : '';
+
+            document.getElementById('prod-cancel-btn').style.display = 'block';
+            document.getElementById('prod-submit-btn').textContent = 'Update Product';
+            document.getElementById('prod-submit-btn').style.background = 'var(--glow-green)';
+        }
+
+        function resetProductForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('edit-product-id').value = '';
+            document.getElementById('prod-editor-title').textContent = 'Add New Product';
+            document.getElementById('prod-cancel-btn').style.display = 'none';
+            document.getElementById('prod-submit-btn').textContent = 'Save Product';
+            document.getElementById('prod-submit-btn').style.background = 'var(--glow-blue)';
+        }
+
+        document.getElementById('prod-cancel-btn').addEventListener('click', resetProductForm);
+
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-product-id').value;
+            const payload = {
+                department_id: parseInt(document.getElementById('prod-category').value),
+                name_en: document.getElementById('prod-name-en').value,
+                name_ar: document.getElementById('prod-name-ar').value,
+                price: parseFloat(document.getElementById('prod-price').value),
+                description_en: document.getElementById('prod-desc-en').value,
+                description_ar: document.getElementById('prod-desc-ar').value,
+                calories: parseInt(document.getElementById('prod-calories').value) || 0,
+                media_path: document.getElementById('prod-img').value,
+                ingredients: document.getElementById('prod-ingredients').value.split(',').map(s => s.trim()).filter(Boolean),
+                allergens: document.getElementById('prod-allergens').value.split(',').map(s => s.trim()).filter(Boolean),
+                currency: 'EGP',
+                media_type: 'image',
+                available: true,
+                featured: false,
+                qr_order_url: `https://example.com/order/${Math.random().toString(36).substr(2, 9)}`
+            };
+
+            try {
+                const url = id ? `${API_BASE}/products/${id}` : `${API_BASE}/products`;
+                const method = id ? 'PUT' : 'POST';
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    resetProductForm();
+                    loadProducts();
+                }
+            } catch (err) { console.error('Failed saving product:', err); }
+        });
+
+        async function deleteProduct(id) {
+            if (!confirm('Hide this product from the menu catalog?')) return;
+            try {
+                await fetch(`${API_BASE}/products/${id}`, { method: 'DELETE' });
+                loadProducts();
+            } catch (e) { console.error(e); }
+        }
+
+        // --- Tab 2: Departments Handler ---
+        async function loadDepartmentsList() {
+            const tbody = document.getElementById('dept-table-body');
+            tbody.innerHTML = '<tr><td colspan="5">Loading departments...</td></tr>';
+            try {
+                const res = await fetch(`${API_BASE}/departments`);
+                departments = await res.json();
+
+                tbody.innerHTML = departments.map(d => `
+          <tr>
+            <td><strong>${d.name_en}</strong></td>
+            <td><strong>${d.name_ar}</strong></td>
+            <td>${d.display_order}</td>
+            <td>
+              <span style="color: ${d.active ? 'var(--glow-green)' : 'var(--glow-pink)'}; font-weight: bold;">
+                ${d.active ? 'ACTIVE' : 'INACTIVE'}
+              </span>
+            </td>
+            <td>
+              <div class="action-links">
+                <button class="action-link link-edit" onclick="initiateDeptEdit(${d.id})">Edit</button>
+                <button class="action-link link-del" onclick="deleteDepartment(${d.id})">Del</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="5" style="color:var(--glow-pink)">Error loading departments.</td></tr>';
+            }
+        }
+
+        function initiateDeptEdit(id) {
+            const d = departments.find(dept => dept.id === id);
+            if (!d) return;
+
+            document.getElementById('edit-dept-id').value = d.id;
+            document.getElementById('dept-editor-title').textContent = 'Edit Department';
+            document.getElementById('dept-name-en').value = d.name_en;
+            document.getElementById('dept-name-ar').value = d.name_ar;
+            document.getElementById('dept-order').value = d.display_order;
+            document.getElementById('dept-active').checked = d.active;
+
+            document.getElementById('dept-cancel-btn').style.display = 'block';
+            document.getElementById('dept-submit-btn').textContent = 'Update Department';
+            document.getElementById('dept-submit-btn').style.background = 'var(--glow-green)';
+        }
+
+        function resetDeptForm() {
+            document.getElementById('department-form').reset();
+            document.getElementById('edit-dept-id').value = '';
+            document.getElementById('dept-editor-title').textContent = 'Add Department';
+            document.getElementById('dept-cancel-btn').style.display = 'none';
+            document.getElementById('dept-submit-btn').textContent = 'Save Department';
+            document.getElementById('dept-submit-btn').style.background = 'var(--glow-blue)';
+        }
+
+        document.getElementById('dept-cancel-btn').addEventListener('click', resetDeptForm);
+
+        document.getElementById('department-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-dept-id').value;
+            const payload = {
+                name_en: document.getElementById('dept-name-en').value,
+                name_ar: document.getElementById('dept-name-ar').value,
+                display_order: parseInt(document.getElementById('dept-order').value) || 0,
+                active: document.getElementById('dept-active').checked
+            };
+
+            try {
+                const url = id ? `${API_BASE}/departments/${id}` : `${API_BASE}/departments`;
+                const method = id ? 'PUT' : 'POST';
+                const res = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    resetDeptForm();
+                    loadDepartmentsList();
+                    loadConfig(); // Refresh categories select
+                }
+            } catch (err) { console.error('Failed saving department:', err); }
+        });
+
+        async function deleteDepartment(id) {
+            if (!confirm('Are you sure you want to deactivate/delete this department?')) return;
+            try {
+                await fetch(`${API_BASE}/departments/${id}`, { method: 'DELETE' });
+                loadDepartmentsList();
+                loadConfig();
+            } catch (e) { console.error(e); }
+        }
+
+        // --- Tab 3: Order History Audit Handler ---
+        async function loadOrderHistory() {
+            const tbody = document.getElementById('orders-table-body');
+            tbody.innerHTML = '<tr><td colspan="6">Loading orders...</td></tr>';
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/orders`);
+                historicalOrders = await res.json();
+
+                tbody.innerHTML = historicalOrders.map(order => {
+                    // Status styling classes
+                    let colorClass = 'color-blue';
+                    if (order.status === 'completed') colorClass = 'color-green';
+                    if (order.status === 'cooking') colorClass = 'color-orange';
+                    if (order.status === 'cancelled' || order.status === 'expired') colorClass = 'color-pink';
+
+                    // Format timestamps
+                    const dateStr = order.started_at ? new Date(order.started_at).toLocaleString() : '—';
+
+                    // Render items details
+                    const itemsHTML = order.items.map(item => `
+            <div class="audit-item-row">
+              <span>${item.quantity}x ${item.name_en} (${item.name_ar})</span>
+              <span>@ ${item.unit_price} EGP</span>
+            </div>
+          `).join('');
+
+                    return `
+            <tr>
+              <td><strong>Order #${order.id}</strong></td>
+              <td>${dateStr}</td>
+              <td><strong class="color-green">${order.total_price.toFixed(2)} EGP</strong></td>
+              <td>
+                <span class="${colorClass}" style="font-weight:900; text-transform:uppercase;">
+                  ${order.status}
+                </span>
+              </td>
+              <td>
+                <div class="audit-items-list">
+                  ${itemsHTML || '<span style="color:#718096">No items</span>'}
+                </div>
+              </td>
+              <td>
+                ${order.status === 'confirmed' || order.status === 'cooking' || order.status === 'ready'
+                            ? `<button class="action-btn" onclick="voidOrder(${order.id})" style="border-color:var(--glow-pink); color:var(--glow-pink); padding:4px 8px; font-size:0.75rem; border-radius:5px; background:transparent; cursor:pointer;">Void Order</button>`
+                            : `<span style="color:#4a5568">—</span>`
+                        }
+              </td>
+            </tr>
+          `;
+                }).join('');
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="6" style="color:var(--glow-pink)">Error loading orders.</td></tr>';
+            }
+        }
+
+        async function voidOrder(orderId) {
+            if (!confirm(`Void Order #${orderId}?`)) return;
+            try {
+                await fetch(`${API_BASE}/orders/${orderId}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'cancelled' })
+                });
+                loadOrderHistory();
+            } catch (e) { console.error(e); }
+        }
+
+        // --- Tab 4: Stats & Analytics Report Handler ---
+        async function loadAnalyticsStats() {
+            try {
+                // Fetch counters and popular items
+                const resStats = await fetch(`${API_BASE}/admin/stats`);
+                const stats = await resStats.json();
+
+                // 1. KPI cards rendering
+                document.getElementById('kpi-revenue').textContent = `${stats.total_revenue.toFixed(2)} EGP`;
+                document.getElementById('kpi-avg-ticket').textContent = `${stats.avg_order_value.toFixed(2)} EGP`;
+                document.getElementById('kpi-completed').textContent = stats.completed_orders;
+
+                const canceledCount = (stats.status_counts.cancelled || 0) + (stats.status_counts.expired || 0);
+                document.getElementById('kpi-cancelled').textContent = canceledCount;
+
+                // 2. Popular items render
+                const popBody = document.getElementById('analytics-popular-body');
+                if (stats.popular_items.length === 0) {
+                    popBody.innerHTML = '<tr><td colspan="3" style="text-align:center">No order data yet</td></tr>';
+                } else {
+                    popBody.innerHTML = stats.popular_items.map(item => `
+            <tr>
+              <td><strong>${item.name_en}</strong></td>
+              <td>${item.order_count}</td>
+              <td><span class="price-value" style="color:var(--glow-blue)">${item.total_quantity} sold</span></td>
+            </tr>
+          `).join('');
+                }
+
+                // 3. Interactions Event Log render
+                const resLogs = await fetch(`${API_BASE}/analytics/summary`);
+                const summary = await resLogs.json();
+                const evtsBody = document.getElementById('analytics-events-body');
+                if (summary.length === 0) {
+                    evtsBody.innerHTML = '<tr><td colspan="2" style="text-align:center">No interaction logs yet</td></tr>';
+                } else {
+                    evtsBody.innerHTML = summary.map(evt => `
+            <tr>
+              <td><strong>${evt.event_type.replace(/_/g, ' ').toUpperCase()}</strong></td>
+              <td style="color:var(--glow-green); font-weight:800;">${evt.count} times</td>
+            </tr>
+          `).join('');
+                }
+            } catch (e) {
+                console.error('Failed loading stats:', e);
+            }
+        }
+
+        window.onload = async () => {
+            await loadConfig();
+            // Initialize first tab
+            switchTab('products');
+
+            // Wire realtime updates
+            HoloEvents.init((evt) => {
+                if (evt.type === 'order_update' || evt.type === 'poll_tick') {
+                    const activeTab = document.querySelector('.tab-btn.active').textContent.toLowerCase();
+                    if (activeTab.includes('prod')) loadProducts();
+                    else if (activeTab.includes('dept')) loadDepartmentsList();
+                    else if (activeTab.includes('order')) loadOrderHistory();
+                    else if (activeTab.includes('stat')) loadAnalyticsStats();
+                }
+            });
+        };
+    </script>
+    <script src="events.js"></script>
+    <script src="nav.js"></script>
+    <script>HoloNav.init('admin');</script>
+</body>
+
+</html>

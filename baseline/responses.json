@@ -1,0 +1,1626 @@
+{
+  "captured_at": "2026-07-08T07:05:08",
+  "total_endpoints": 45,
+  "raw_results": [
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "status_code": 404,
+      "body": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/metrics",
+      "status_code": 404,
+      "body": {
+        "detail": "Not Found"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status_code": 200,
+      "body": {
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidGVuYW50X2lkIjoiZDQ0NDQ0NDQtNDQ0NC00NDQ0LTQ0NDQtNDQ0NDQ0NDQ0NDQ0Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzgzNDg0NDA3LCJ0eXBlIjoiYWNjZXNzIn0.NFFnuCj_OuAwFXpkbZOYuqo3cSND9E4zI_bBKAtn8jc",
+        "token_type": "bearer",
+        "role": "admin"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status_code": 401,
+      "body": {
+        "detail": "Invalid username or password"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status_code": 422,
+      "body": {
+        "detail": [
+          {
+            "type": "missing",
+            "loc": [
+              "body",
+              "password"
+            ],
+            "msg": "Field required",
+            "input": {
+              "username": "admin"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/login",
+      "status_code": 422,
+      "body": {
+        "detail": [
+          {
+            "type": "extra_forbidden",
+            "loc": [
+              "body",
+              "extra"
+            ],
+            "msg": "Extra inputs are not permitted",
+            "input": "bad"
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/departments",
+      "status_code": 200,
+      "body": [
+        {
+          "id": 1,
+          "name_en": "Burgers",
+          "name_ar": "برجر",
+          "icon_path": "assets/icons/burgers.svg",
+          "display_order": 1,
+          "active": 1,
+          "created_at": "2026-07-06T20:18:15",
+          "updated_at": "2026-07-06T20:18:15",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 2,
+          "name_en": "Sides",
+          "name_ar": "مقبلات",
+          "icon_path": "assets/icons/sides.svg",
+          "display_order": 2,
+          "active": 1,
+          "created_at": "2026-07-06T20:18:15",
+          "updated_at": "2026-07-06T20:18:15",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 3,
+          "name_en": "Drinks",
+          "name_ar": "مشروبات",
+          "icon_path": "assets/icons/drinks.svg",
+          "display_order": 3,
+          "active": 1,
+          "created_at": "2026-07-06T20:18:15",
+          "updated_at": "2026-07-06T20:18:15",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 4,
+          "name_en": "Desserts",
+          "name_ar": "حلويات",
+          "icon_path": "assets/icons/desserts.svg",
+          "display_order": 4,
+          "active": 1,
+          "created_at": "2026-07-06T20:18:15",
+          "updated_at": "2026-07-06T20:18:15",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/departments/1/products",
+      "status_code": 200,
+      "body": [
+        {
+          "id": 1,
+          "department_id": 1,
+          "name_en": "Holo Classic Burger",
+          "name_ar": "هولو برجر كلاسيك",
+          "description_en": "Premium double beef patty, aged cheddar, secret smoky sauce, fresh lettuce on a toasted brioche bun.",
+          "description_ar": "شريحتين لحم بقري فاخر، جبن شيدر معتق، صلصة مدخنة سرية، خس طازج في خبز بريوش محمص.",
+          "price": 180.0,
+          "currency": "EGP",
+          "ingredients": [
+            "100% Beef Patty",
+            "Cheddar Cheese",
+            "Secret Sauce",
+            "Lettuce",
+            "Brioche Bun"
+          ],
+          "calories": 720,
+          "allergens": [
+            "Gluten",
+            "Dairy"
+          ],
+          "media_type": "image",
+          "media_path": "assets/images/burger.png",
+          "thumbnail_path": "assets/images/burger_thumb.png",
+          "available": 1,
+          "featured": 1,
+          "qr_order_url": "https://example.com/order/prod_burger",
+          "created_at": "2026-07-06T20:18:15",
+          "updated_at": "2026-07-06T20:18:15",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 2,
+          "department_id": 1,
+          "name_en": "Neon Smash Burger",
+          "name_ar": "برجر سماش النيون",
+          "description_en": "Two smashed patties, American cheese, pickles, mustard, crispy onions on a sesame bun.",
+          "description_ar": "شريحتان مسحوقتان، جبن أمريكي، مخلل، خردل، بصل مقرمش في خبز سمسم.",
+          "price": 160.0,
+          "currency": "EGP",
+          "ingredients": [
+            "Smash Patties",
+            "American Cheese",
+            "Pickles",
+            "Mustard",
+            "Crispy Onions",
+            "Sesame Bun"
+          ],
+          "calories": 680,
+          "allergens": [
+            "Gluten",
+            "Dairy"
+          ],
+          "media_type": "image",
+          "media_path": "assets/images/burger.png",
+          "thumbnail_path": "assets/images/burger_thumb.png",
+          "available": 1,
+          "featured": 0,
+          "qr_order_url": "https://example.com/order/prod_smash",
+          "created_at": "2026-07-06T20:18:15",
+          "updated_at": "2026-07-06T20:18:15",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/departments/99999/products",
+      "status_code": 200,
+      "body": []
+    },
+    {
+      "method": "GET",
+      "path": "/api/products/1",
+      "status_code": 200,
+      "body": {
+        "id": 1,
+        "department_id": 1,
+        "name_en": "Holo Classic Burger",
+        "name_ar": "هولو برجر كلاسيك",
+        "description_en": "Premium double beef patty, aged cheddar, secret smoky sauce, fresh lettuce on a toasted brioche bun.",
+        "description_ar": "شريحتين لحم بقري فاخر، جبن شيدر معتق، صلصة مدخنة سرية، خس طازج في خبز بريوش محمص.",
+        "price": 180.0,
+        "currency": "EGP",
+        "ingredients": [
+          "100% Beef Patty",
+          "Cheddar Cheese",
+          "Secret Sauce",
+          "Lettuce",
+          "Brioche Bun"
+        ],
+        "calories": 720,
+        "allergens": [
+          "Gluten",
+          "Dairy"
+        ],
+        "media_type": "image",
+        "media_path": "assets/images/burger.png",
+        "thumbnail_path": "assets/images/burger_thumb.png",
+        "available": 1,
+        "featured": 1,
+        "qr_order_url": "https://example.com/order/prod_burger",
+        "created_at": "2026-07-06T20:18:15",
+        "updated_at": "2026-07-06T20:18:15",
+        "tenant_id": "d4444444-4444-4444-4444-444444444444"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/products/99999",
+      "status_code": 404,
+      "body": {
+        "detail": "Product not found"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status_code": 201,
+      "body": {
+        "order_uid": "81f16716-34d7-45b2-843a-235b9d031d48",
+        "status": "pending"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders/81f16716-34d7-45b2-843a-235b9d031d48/items",
+      "status_code": 201,
+      "body": {
+        "status": "item_added"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/orders/81f16716-34d7-45b2-843a-235b9d031d48/items",
+      "status_code": 200,
+      "body": {
+        "status": "item_updated"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders/81f16716-34d7-45b2-843a-235b9d031d48/confirm",
+      "status_code": 500,
+      "body": "Internal Server Error"
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders",
+      "status_code": 201,
+      "body": {
+        "order_uid": "6d534c52-a593-4750-9a54-4a244fb4dad8",
+        "status": "pending"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders/6d534c52-a593-4750-9a54-4a244fb4dad8/cancel",
+      "status_code": 500,
+      "body": "Internal Server Error"
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders/nonexistent-uid/confirm",
+      "status_code": 404,
+      "body": {
+        "detail": "Order not found"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders/nonexistent-uid/cancel",
+      "status_code": 404,
+      "body": {
+        "detail": "Order not found"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/orders",
+      "status_code": 401,
+      "body": {
+        "detail": "Authentication required"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/stats",
+      "status_code": 401,
+      "body": {
+        "detail": "Authentication required"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/analytics/summary",
+      "status_code": 401,
+      "body": {
+        "detail": "Authentication required"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/chef/orders",
+      "status_code": 401,
+      "body": {
+        "detail": "Authentication required"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/cashier/orders",
+      "status_code": 401,
+      "body": {
+        "detail": "Authentication required"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/products",
+      "status_code": 401,
+      "body": {
+        "detail": "Authentication required"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/orders",
+      "status_code": 200,
+      "body": [
+        {
+          "id": 55,
+          "order_uid": "6d534c52-a593-4750-9a54-4a244fb4dad8",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:05:08",
+          "completed_at": "2026-07-08T04:05:08",
+          "items": []
+        },
+        {
+          "id": 54,
+          "order_uid": "81f16716-34d7-45b2-843a-235b9d031d48",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:05:08",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 53,
+          "order_uid": "62ffef71-7f16-4c33-9fe6-15ff23f4d6b0",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:04:11",
+          "completed_at": "2026-07-08T04:04:11",
+          "items": []
+        },
+        {
+          "id": 52,
+          "order_uid": "3385f2d1-90c3-42c6-9ff5-b9c707bae387",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:04:10",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 51,
+          "order_uid": "f173d679-8ca7-4828-abf3-24734f52eb74",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:03:05",
+          "completed_at": "2026-07-08T04:03:05",
+          "items": []
+        },
+        {
+          "id": 50,
+          "order_uid": "583e9ace-2193-41d8-bbf5-5ad45145fa3b",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:03:04",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 49,
+          "order_uid": "cfa27c8e-6573-44b0-ba3f-5d11d3637d97",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T06:51:20",
+          "completed_at": "2026-07-08T03:51:20",
+          "items": []
+        },
+        {
+          "id": 48,
+          "order_uid": "2c10b17a-8929-4e82-9073-bd7230ba9265",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T06:51:20",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 47,
+          "order_uid": "96f42d96-f694-40be-a3fb-bfaaf033a8a9",
+          "status": "confirmed",
+          "total_price": 160.0,
+          "started_at": "2026-07-07T07:05:14",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 1,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون",
+              "unit_price": 160.0
+            }
+          ]
+        },
+        {
+          "id": 46,
+          "order_uid": "0b934750-f1b7-408f-85f7-d32e5cbf7554",
+          "status": "confirmed",
+          "total_price": 340.0,
+          "started_at": "2026-07-07T06:53:59",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 1,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون",
+              "unit_price": 160.0
+            },
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 45,
+          "order_uid": "4a83a932-1a67-4db3-8d1e-173693ec608f",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T06:47:46",
+          "completed_at": "2026-07-07T03:47:53",
+          "items": []
+        },
+        {
+          "id": 44,
+          "order_uid": "1ffe3867-808f-4098-aa5a-c3cd86c2cba5",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T06:36:12",
+          "completed_at": "2026-07-07T03:36:29",
+          "items": []
+        },
+        {
+          "id": 43,
+          "order_uid": "c6b04bba-b306-48e5-b253-7553fe27849d",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T06:31:35",
+          "completed_at": "2026-07-07T03:32:50",
+          "items": []
+        },
+        {
+          "id": 42,
+          "order_uid": "472e1a5c-cc05-43b4-ba95-2186e8896758",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T06:23:46",
+          "completed_at": "2026-07-07T03:25:36",
+          "items": []
+        },
+        {
+          "id": 41,
+          "order_uid": "5ebebffe-2044-4eb4-b0f1-4dbf6b79433d",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T06:22:06",
+          "completed_at": "2026-07-07T03:23:20",
+          "items": []
+        },
+        {
+          "id": 40,
+          "order_uid": "90c32186-6dcb-4d45-8c5f-48b65421d19c",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T05:56:55",
+          "completed_at": "2026-07-07T02:58:11",
+          "items": []
+        },
+        {
+          "id": 39,
+          "order_uid": "077aadd8-8f08-497d-a989-d6464d39e20a",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T05:50:33",
+          "completed_at": "2026-07-07T02:52:05",
+          "items": []
+        },
+        {
+          "id": 38,
+          "order_uid": "7ccd0b77-a64e-446a-b9e4-44d4d47728d1",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T05:50:17",
+          "completed_at": "2026-07-07T02:51:33",
+          "items": []
+        },
+        {
+          "id": 37,
+          "order_uid": "8a0b7671-4bb0-41a4-b502-994e4138ff4a",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T05:45:21",
+          "completed_at": "2026-07-07T02:46:36",
+          "items": []
+        },
+        {
+          "id": 36,
+          "order_uid": "a3eddcbf-786b-4888-b8d0-5e4b64be5edb",
+          "status": "completed",
+          "total_price": 205.0,
+          "started_at": "2026-07-07T05:26:06",
+          "completed_at": "2026-07-07T02:28:27",
+          "items": [
+            {
+              "product_id": 3,
+              "quantity": 1,
+              "name_en": "Neon Loaded Fries",
+              "name_ar": "بطاطس نيون لودد",
+              "unit_price": 95.0
+            },
+            {
+              "product_id": 7,
+              "quantity": 1,
+              "name_en": "Cyber Lava Cake",
+              "name_ar": "كيكة الحمم السيبرانية",
+              "unit_price": 110.0
+            }
+          ]
+        },
+        {
+          "id": 35,
+          "order_uid": "ca995468-b686-4ec9-97b4-aa5de0298b7e",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T04:53:38",
+          "completed_at": "2026-07-07T01:54:45",
+          "items": []
+        },
+        {
+          "id": 34,
+          "order_uid": "45c5e4d1-b4c4-429a-b489-5c1f26317842",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T04:41:10",
+          "completed_at": "2026-07-07T01:41:52",
+          "items": []
+        },
+        {
+          "id": 33,
+          "order_uid": "26e4ae94-2a18-40d3-834a-ad520344f1c1",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T04:39:38",
+          "completed_at": "2026-07-07T01:40:54",
+          "items": []
+        },
+        {
+          "id": 32,
+          "order_uid": "0a71631f-b759-40fc-9e6d-e18bf66c4b3c",
+          "status": "pending",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T04:33:34",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 31,
+          "order_uid": "5f7b47bc-0ee1-41f2-bca9-f6a3ed053ede",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T04:26:17",
+          "completed_at": "2026-07-07T01:28:31",
+          "items": []
+        },
+        {
+          "id": 30,
+          "order_uid": "7fc26855-20e9-4cca-92f1-7b68f3250e3a",
+          "status": "pending",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T04:04:53",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 29,
+          "order_uid": "0cbf7386-d58d-440d-84d9-362bd2ff69e8",
+          "status": "pending",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T04:04:38",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 28,
+          "order_uid": "f4fd7af0-d596-4a00-8cca-a853d31ecf4e",
+          "status": "pending",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T04:04:05",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 27,
+          "order_uid": "eefeb755-b7d1-42e0-9ce8-dcaa56cd39df",
+          "status": "pending",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T04:03:27",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 26,
+          "order_uid": "2e6f9e3f-b8d9-492e-b3d6-620b987f2289",
+          "status": "completed",
+          "total_price": 180.0,
+          "started_at": "2026-07-07T03:57:42",
+          "completed_at": "2026-07-07T02:28:12",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 25,
+          "order_uid": "04718e42-e41a-4916-bb1a-2c0925d9264b",
+          "status": "cancelled",
+          "total_price": 180.0,
+          "started_at": "2026-07-07T03:54:07",
+          "completed_at": "2026-07-07T00:56:35",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 24,
+          "order_uid": "b54cd5b5-cd20-4d6e-9250-8f9e3e9bb00d",
+          "status": "cancelled",
+          "total_price": 180.0,
+          "started_at": "2026-07-07T03:52:13",
+          "completed_at": "2026-07-07T00:53:30",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 23,
+          "order_uid": "e3d09115-84a5-4516-b08d-8be2563c4b9c",
+          "status": "cancelled",
+          "total_price": 180.0,
+          "started_at": "2026-07-07T03:50:38",
+          "completed_at": "2026-07-07T00:51:54",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 22,
+          "order_uid": "e79abad4-82c7-48db-af61-de73812ff52e",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T03:48:23",
+          "completed_at": "2026-07-07T00:49:39",
+          "items": []
+        },
+        {
+          "id": 21,
+          "order_uid": "9f2f7221-ab14-4833-8624-a8552976321b",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T03:47:34",
+          "completed_at": "2026-07-07T00:47:44",
+          "items": []
+        },
+        {
+          "id": 20,
+          "order_uid": "58f0dfc6-0d62-4877-9f9c-dbb37795f0b5",
+          "status": "pending",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T03:46:52",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 19,
+          "order_uid": "a1f90e9d-1842-4c5f-afc2-5571f7874a20",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T03:42:09",
+          "completed_at": "2026-07-07T00:43:25",
+          "items": []
+        },
+        {
+          "id": 18,
+          "order_uid": "211e142d-1b71-4a8c-aca6-b6f7b3c348aa",
+          "status": "cancelled",
+          "total_price": 180.0,
+          "started_at": "2026-07-07T03:32:41",
+          "completed_at": "2026-07-07T00:33:07",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 17,
+          "order_uid": "8b6489b8-1ad9-436c-ac54-20a3b2e230c8",
+          "status": "pending",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T03:32:20",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 16,
+          "order_uid": "5f44db0b-eee4-403c-ac69-ebad0dad4a17",
+          "status": "completed",
+          "total_price": 180.0,
+          "started_at": "2026-07-07T02:54:50",
+          "completed_at": "2026-07-07T00:31:09",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 15,
+          "order_uid": "a309c0ea-7f7a-41c5-a18f-29c0f1dce8bf",
+          "status": "pending",
+          "total_price": 0.0,
+          "started_at": "2026-07-07T02:54:21",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 14,
+          "order_uid": "3341320f-249f-4d86-aad9-226ec6ec0f21",
+          "status": "completed",
+          "total_price": 180.0,
+          "started_at": "2026-07-06T21:34:09",
+          "completed_at": "2026-07-06T18:34:09",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/admin/stats",
+      "status_code": 200,
+      "body": {
+        "completed_orders": 4,
+        "total_revenue": 745.0,
+        "avg_order_value": 186.25,
+        "status_counts": {
+          "pending": 8,
+          "confirmed": 6,
+          "completed": 4,
+          "cancelled": 24
+        },
+        "popular_items": [
+          {
+            "name_en": "Holo Classic Burger",
+            "order_count": 12,
+            "total_quantity": 20
+          },
+          {
+            "name_en": "Neon Smash Burger",
+            "order_count": 2,
+            "total_quantity": 2
+          },
+          {
+            "name_en": "Cyber Lava Cake",
+            "order_count": 1,
+            "total_quantity": 1
+          },
+          {
+            "name_en": "Neon Loaded Fries",
+            "order_count": 1,
+            "total_quantity": 1
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/analytics/summary",
+      "status_code": 200,
+      "body": [
+        {
+          "event_type": "department_click",
+          "count": 18
+        },
+        {
+          "event_type": "add_to_cart",
+          "count": 15
+        },
+        {
+          "event_type": "baseline_test",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/chef/orders",
+      "status_code": 200,
+      "body": [
+        {
+          "id": 46,
+          "order_uid": "0b934750-f1b7-408f-85f7-d32e5cbf7554",
+          "status": "confirmed",
+          "total_price": 340.0,
+          "started_at": "2026-07-07T06:53:59",
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 1,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون"
+            },
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 47,
+          "order_uid": "96f42d96-f694-40be-a3fb-bfaaf033a8a9",
+          "status": "confirmed",
+          "total_price": 160.0,
+          "started_at": "2026-07-07T07:05:14",
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 1,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون"
+            }
+          ]
+        },
+        {
+          "id": 48,
+          "order_uid": "2c10b17a-8929-4e82-9073-bd7230ba9265",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T06:51:20",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 50,
+          "order_uid": "583e9ace-2193-41d8-bbf5-5ad45145fa3b",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:03:04",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 52,
+          "order_uid": "3385f2d1-90c3-42c6-9ff5-b9c707bae387",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:04:10",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 54,
+          "order_uid": "81f16716-34d7-45b2-843a-235b9d031d48",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:05:08",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/cashier/orders",
+      "status_code": 200,
+      "body": [
+        {
+          "id": 46,
+          "order_uid": "0b934750-f1b7-408f-85f7-d32e5cbf7554",
+          "status": "confirmed",
+          "total_price": 340.0,
+          "started_at": "2026-07-07T06:53:59",
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 1,
+              "unit_price": 160.0,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون"
+            },
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 47,
+          "order_uid": "96f42d96-f694-40be-a3fb-bfaaf033a8a9",
+          "status": "confirmed",
+          "total_price": 160.0,
+          "started_at": "2026-07-07T07:05:14",
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 1,
+              "unit_price": 160.0,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون"
+            }
+          ]
+        },
+        {
+          "id": 48,
+          "order_uid": "2c10b17a-8929-4e82-9073-bd7230ba9265",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T06:51:20",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 50,
+          "order_uid": "583e9ace-2193-41d8-bbf5-5ad45145fa3b",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:03:04",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 52,
+          "order_uid": "3385f2d1-90c3-42c6-9ff5-b9c707bae387",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:04:10",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 54,
+          "order_uid": "81f16716-34d7-45b2-843a-235b9d031d48",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:05:08",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders/1/status",
+      "status_code": 404,
+      "body": {
+        "detail": "Order not found"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders/1/status",
+      "status_code": 404,
+      "body": {
+        "detail": "Order not found"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders/1/status",
+      "status_code": 400,
+      "body": {
+        "detail": "Invalid status. Must be one of ['cancelled', 'completed', 'confirmed', 'cooking', 'expired', 'pending', 'ready']"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/products",
+      "status_code": 201,
+      "body": {
+        "status": "created",
+        "id": 13
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/products/13",
+      "status_code": 500,
+      "body": "Internal Server Error"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/products/13",
+      "status_code": 500,
+      "body": "Internal Server Error"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/products/99999",
+      "status_code": 404,
+      "body": {
+        "detail": "Product not found"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/products/99999",
+      "status_code": 404,
+      "body": {
+        "detail": "Product not found"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/departments",
+      "status_code": 201,
+      "body": {
+        "status": "created",
+        "id": 9
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/departments/9",
+      "status_code": 500,
+      "body": "Internal Server Error"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/departments/9",
+      "status_code": 500,
+      "body": "Internal Server Error"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/departments/99999",
+      "status_code": 404,
+      "body": {
+        "detail": "Department not found"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/departments/99999",
+      "status_code": 404,
+      "body": {
+        "detail": "Department not found"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/logout",
+      "status_code": 200,
+      "body": {
+        "detail": "Logged out successfully"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/analytics/events",
+      "status_code": 201,
+      "body": {
+        "status": "logged"
+      }
+    }
+  ],
+  "normalized": [
+    {
+      "method": "GET",
+      "path_pattern": "/api/health",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/metrics",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/auth/login",
+      "status_code": 200,
+      "body_keys": [
+        "access_token",
+        "role",
+        "token_type"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/auth/login",
+      "status_code": 401,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/auth/login",
+      "status_code": 422,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/auth/login",
+      "status_code": 422,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/departments",
+      "status_code": 200,
+      "body_type": "list",
+      "body_length": 4
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/departments/{id}/products",
+      "status_code": 200,
+      "body_type": "list",
+      "body_length": 2
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/departments/{id}/products",
+      "status_code": 200,
+      "body_type": "list",
+      "body_length": 0
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/products/{id}",
+      "status_code": 200,
+      "body_keys": [
+        "allergens",
+        "available",
+        "calories",
+        "created_at",
+        "currency",
+        "department_id",
+        "description_ar",
+        "description_en",
+        "featured",
+        "id",
+        "ingredients",
+        "media_path",
+        "media_type",
+        "name_ar",
+        "name_en",
+        "price",
+        "qr_order_url",
+        "tenant_id",
+        "thumbnail_path",
+        "updated_at"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/products/{id}",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders",
+      "status_code": 201,
+      "body_keys": [
+        "order_uid",
+        "status"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders/{uid}/items",
+      "status_code": 201,
+      "body_keys": [
+        "status"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path_pattern": "/api/orders/{uid}/items",
+      "status_code": 200,
+      "body_keys": [
+        "status"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders/{uid}/confirm",
+      "status_code": 500,
+      "body_type": "str"
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders",
+      "status_code": 201,
+      "body_keys": [
+        "order_uid",
+        "status"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders/{uid}/cancel",
+      "status_code": 500,
+      "body_type": "str"
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders/nonexistent-uid/confirm",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders/nonexistent-uid/cancel",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/admin/orders",
+      "status_code": 401,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/admin/stats",
+      "status_code": 401,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/analytics/summary",
+      "status_code": 401,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/chef/orders",
+      "status_code": 401,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/cashier/orders",
+      "status_code": 401,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/products",
+      "status_code": 401,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/admin/orders",
+      "status_code": 200,
+      "body_type": "list",
+      "body_length": 42
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/admin/stats",
+      "status_code": 200,
+      "body_keys": [
+        "avg_order_value",
+        "completed_orders",
+        "popular_items",
+        "status_counts",
+        "total_revenue"
+      ]
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/analytics/summary",
+      "status_code": 200,
+      "body_type": "list",
+      "body_length": 3
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/chef/orders",
+      "status_code": 200,
+      "body_type": "list",
+      "body_length": 6
+    },
+    {
+      "method": "GET",
+      "path_pattern": "/api/cashier/orders",
+      "status_code": 200,
+      "body_type": "list",
+      "body_length": 6
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders/{id}/status",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders/{id}/status",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders/{id}/status",
+      "status_code": 400,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/products",
+      "status_code": 201,
+      "body_keys": [
+        "id",
+        "status"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path_pattern": "/api/products/{id}",
+      "status_code": 500,
+      "body_type": "str"
+    },
+    {
+      "method": "DELETE",
+      "path_pattern": "/api/products/{id}",
+      "status_code": 500,
+      "body_type": "str"
+    },
+    {
+      "method": "PUT",
+      "path_pattern": "/api/products/{id}",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path_pattern": "/api/products/{id}",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/departments",
+      "status_code": 201,
+      "body_keys": [
+        "id",
+        "status"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path_pattern": "/api/departments/{id}",
+      "status_code": 500,
+      "body_type": "str"
+    },
+    {
+      "method": "DELETE",
+      "path_pattern": "/api/departments/{id}",
+      "status_code": 500,
+      "body_type": "str"
+    },
+    {
+      "method": "PUT",
+      "path_pattern": "/api/departments/{id}",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path_pattern": "/api/departments/{id}",
+      "status_code": 404,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/auth/logout",
+      "status_code": 200,
+      "body_keys": [
+        "detail"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/analytics/events",
+      "status_code": 201,
+      "body_keys": [
+        "status"
+      ]
+    }
+  ]
+}

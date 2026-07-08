@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoloMenu Cashier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #07090e;
+            --panel: rgba(14, 20, 32, 0.85);
+            --border: rgba(0, 240, 255, 0.15);
+            --blue: #00f0ff;
+            --green: #00e676;
+            --orange: #ff9800;
+            --pink: #ff1744;
+            --gold: #ffd740;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            background-image:
+                linear-gradient(rgba(0, 240, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.025) 1px, transparent 1px);
+            background-size: 50px 50px;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 30px;
+            gap: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand h1 {
+            font-size: 1.9rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .brand h1 span {
+            color: var(--gold);
+        }
+
+        .brand p {
+            font-size: 0.8rem;
+            color: #718096;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .top-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .refresh-btn {
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid var(--blue);
+            color: var(--blue);
+            padding: 9px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(0, 240, 255, 0.15);
+        }
+
+        .live-clock {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #a0aec0;
+            letter-spacing: 1px;
+        }
+
+        /* ── Three-column grid ── */
+        .cashier-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 20px;
+            flex: 1;
+        }
+
+        /* Queue panel */
+        .queue-panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            overflow-y: auto;
+            max-height: calc(100vh - 130px);
+        }
+
+        .panel-header {
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--blue);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-count-badge {
+            background: var(--blue);
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: 900;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Order cards */
+        .order-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .order-card:hover {
+            border-color: var(--blue);
+            background: rgba(0, 240, 255, 0.04);
+        }
+
+        .order-card.selected {
+            border-color: var(--gold);
+            background: rgba(255, 215, 64, 0.05);
+            box-shadow: 0 0 20px rgba(255, 215, 64, 0.1);
+        }
+
+        .order-num {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--blue);
+            border-radius: 10px;
+            width: 64px;
+            height: 64px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 900;
+            font-size: 1.5rem;
+            color: var(--blue);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+
+        .order-num small {
+            font-size: 0.6rem;
+            color: #718096;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .order-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .order-info-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .order-time {
+            font-size: 0.78rem;
+            color: #718096;
+        }
+
+        .order-total {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--green);
+        }
+
+        .items-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .item-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 3px 9px;
+            font-size: 0.78rem;
+            color: #a0aec0;
+        }
+
+        .item-chip strong {
+            color: #fff;
+        }
+
+        /* Status pill */
+        .status-pill {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pill-confirmed {
+            background: rgba(0, 240, 255, 0.12);
+            color: var(--blue);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+        }
+
+        .pill-cooking {
+            background: rgba(255, 152, 0, 0.12);
+            color: var(--orange);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+        }
+
+        .pill-ready {
+            background: rgba(0, 230, 118, 0.12);
+            color: var(--green);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+
+        /* Checkout sidebar */
+        .checkout-panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            max-height: calc(100vh - 130px);
+            overflow-y: auto;
+        }
+
+        .checkout-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            gap: 12px;
+            color: #4a5568;
+            text-align: center;
+            min-height: 300px;
+        }
+
+        .checkout-empty .icon {
+            font-size: 3rem;
+        }
+
+        .checkout-empty p {
+            font-size: 0.9rem;
+        }
+
+        .receipt {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            padding-bottom: 14px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .receipt-header h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--gold);
+            text-shadow: 0 0 12px rgba(255, 215, 64, 0.3);
+        }
+
+        .receipt-header p {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        .receipt-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .receipt-item-name {
+            color: #e2e8f0;
+        }
+
+        .receipt-item-qty {
+            color: #718096;
+            margin: 0 8px;
+        }
+
+        .receipt-item-price {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .receipt-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.3rem;
+            font-weight: 900;
+            padding: 14px 12px;
+            background: rgba(0, 230, 118, 0.06);
+            border: 1px solid rgba(0, 230, 118, 0.25);
+            border-radius: 10px;
+            color: var(--green);
+        }
+
+        /* Payment method selector */
+        .pay-method-section h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #718096;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .pay-method-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .pay-method-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #a0aec0;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 12px 6px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pay-method-btn .icon {
+            font-size: 1.3rem;
+        }
+
+        .pay-method-btn:hover {
+            border-color: var(--blue);
+            color: #fff;
+        }
+
+        .pay-method-btn.selected {
+            background: rgba(0, 240, 255, 0.08);
+            border-color: var(--blue);
+            color: var(--blue);
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+        }
+
+        /* Cash tendering */
+        .cash-section {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cash-section.visible {
+            display: flex;
+        }
+
+        .cash-section h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #718096;
+            letter-spacing: 1px;
+        }
+
+        .cash-input {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 12px 16px;
+            outline: none;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+
+        .cash-input:focus {
+            border-color: var(--green);
+        }
+
+        .quick-amounts {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-amt-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-family: inherit;
+            font-weight: 600;
+            padding: 7px 14px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .quick-amt-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--green);
+        }
+
+        .change-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 10px 14px;
+            background: rgba(255, 215, 64, 0.07);
+            border: 1px solid rgba(255, 215, 64, 0.25);
+            border-radius: 10px;
+            color: var(--gold);
+        }
+
+        /* Pay button */
+        .pay-btn {
+            background: linear-gradient(135deg, #00e676, #00bcd4);
+            color: #000;
+            font-family: inherit;
+            font-weight: 900;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(0, 230, 118, 0.25);
+        }
+
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 230, 118, 0.35);
+        }
+
+        .pay-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Success overlay */
+        .success-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.visible {
+            display: flex;
+        }
+
+        .success-box {
+            background: var(--panel);
+            border: 1px solid rgba(0, 230, 118, 0.4);
+            border-radius: 24px;
+            padding: 40px 50px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 0 60px rgba(0, 230, 118, 0.15);
+            max-width: 400px;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+        }
+
+        .success-box h2 {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--green);
+        }
+
+        .success-box p {
+            color: #a0aec0;
+            font-size: 0.95rem;
+        }
+
+        .success-change {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--gold);
+            background: rgba(255, 215, 64, 0.08);
+            border: 1px solid rgba(255, 215, 64, 0.3);
+            border-radius: 12px;
+            padding: 12px 24px;
+        }
+
+        .dismiss-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-family: inherit;
+            font-weight: 700;
+            padding: 10px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: all 0.2s;
+        }
+
+        .dismiss-btn:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 60px 0;
+            color: #4a5568;
+        }
+
+        .no-orders .icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand">
+            <h1>HoloMenu <span>Cashier</span></h1>
+            <p>Payment Terminal & Order Handoff</p>
+        </div>
+        <div class="top-controls">
+            <span class="live-clock" id="live-clock">--:--:--</span>
+            <button class="refresh-btn" onclick="window.open('index.html', '_blank')">📺 Customer View</button>
+            <button class="refresh-btn" onclick="loadOrders()">⟳ Refresh</button>
+        </div>
+    </header>
+
+    <!-- Cashier Main Grid -->
+    <div class="cashier-grid">
+
+        <!-- Left: Order Queue -->
+        <section class="queue-panel">
+            <div class="panel-header">
+                Order Queue
+                <span class="order-count-badge" id="order-count-badge">0</span>
+            </div>
+            <div id="order-queue">
+                <div class="no-orders">
+                    <div class="icon">🕐</div>
+                    <p>Loading orders…</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right: Checkout Panel -->
+        <section class="checkout-panel" id="checkout-panel">
+            <div class="checkout-empty" id="checkout-empty">
+                <div class="icon">🧾</div>
+                <p>Click an order from the queue<br>to begin checkout</p>
+            </div>
+
+            <!-- Receipt area (hidden until order is selected) -->
+            <div class="receipt" id="checkout-receipt" style="display:none;">
+
+                <div class="receipt-header">
+                    <h2 id="receipt-order-num">Order #--</h2>
+                    <p id="receipt-time">--:--</p>
+                </div>
+
+                <div class="receipt-items" id="receipt-items-list"></div>
+
+                <div class="receipt-total">
+                    <span>TOTAL</span>
+                    <span id="receipt-total">0.00 EGP</span>
+                </div>
+
+                <!-- Payment Method Selection -->
+                <div class="pay-method-section">
+                    <h4>Payment Method</h4>
+                    <div class="pay-method-group">
+                        <button class="pay-method-btn" data-method="cash" onclick="selectPayMethod('cash')">
+                            <span class="icon">💵</span> Cash
+                        </button>
+                        <button class="pay-method-btn" data-method="card" onclick="selectPayMethod('card')">
+                            <span class="icon">💳</span> Card
+                        </button>
+                        <button class="pay-method-btn" data-method="wallet" onclick="selectPayMethod('wallet')">
+                            <span class="icon">📱</span> Wallet
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cash Tendering (visible only for cash method) -->
+                <div class="cash-section" id="cash-section">
+                    <h4>Cash Tendered</h4>
+                    <input type="number" class="cash-input" id="cash-input" placeholder="0.00 EGP"
+                        oninput="updateChange()" step="0.5" min="0">
+                    <div class="quick-amounts" id="quick-amounts"></div>
+                    <div class="change-display" id="change-display" style="display:none;">
+                        <span>Change Due</span>
+                        <span id="change-amount">0.00 EGP</span>
+                    </div>
+                </div>
+
+                <!-- Process & Cancel Buttons -->
+                <div style="display: flex; gap: 12px; margin-top: 10px;">
+                    <button class="pay-btn" id="process-pay-btn" disabled onclick="processPayment()"
+                        style="flex: 1; margin-top:0;">
+                        ✓ Process Payment
+                    </button>
+                    <button class="pay-btn" id="cancel-order-btn" onclick="cancelOrder()"
+                        style="background: linear-gradient(135deg, #ff1744, #ff5252); color: #fff; flex: 1; margin-top:0; box-shadow: 0 4px 20px rgba(255, 23, 68, 0.25);">
+                        ✕ Cancel Order
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="success-overlay">
+        <div class="success-box">
+            <div class="success-icon">✅</div>
+            <h2>Payment Confirmed</h2>
+            <p id="success-detail">Order has been paid and completed.</p>
+            <div class="success-change" id="success-change-display" style="display:none;"></div>
+            <button class="dismiss-btn" onclick="dismissSuccess()">Next Order</button>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://127.0.0.1:8081/api';
+        let orders = [];
+        let selectedOrder = null;
+        let selectedMethod = null;
+
+        // Live clock
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('live-clock').textContent = now.toLocaleTimeString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Auto-refresh queue every 10s
+        setInterval(loadOrders, 10000);
+
+        async function loadOrders() {
+            try {
+                const res = await fetch(`${API}/cashier/orders`);
+                orders = await res.json();
+                renderQueue();
+            } catch (e) {
+                console.error('Failed to load orders:', e);
+                document.getElementById('order-queue').innerHTML = `
+          <div class="no-orders">
+            <div class="icon">⚠️</div>
+            <p>Could not connect to backend.<br>Make sure the server is running.</p>
+          </div>`;
+            }
+        }
+
+        function renderQueue() {
+            const container = document.getElementById('order-queue');
+            const badge = document.getElementById('order-count-badge');
+            badge.textContent = orders.length;
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+          <div class="no-orders">
+            <div class="icon">✅</div>
+            <p>No orders pending — all clear!</p>
+          </div>`;
+                return;
+            }
+
+            container.innerHTML = orders.map(order => {
+                const isSelected = selectedOrder && selectedOrder.id === order.id;
+                const statusClass = `pill-${order.status}`;
+                const timeStr = order.started_at
+                    ? new Date(order.started_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    : '—';
+                const itemsHTML = order.items.slice(0, 4).map(item =>
+                    `<div class="item-chip"><strong>${item.quantity}x</strong> ${item.name_en}</div>`
+                ).join('') + (order.items.length > 4 ? `<div class="item-chip">+${order.items.length - 4} more</div>` : '');
+
+                return `
+          <div class="order-card ${isSelected ? 'selected' : ''}" onclick="selectOrder(${order.id})">
+            <div class="order-num">
+              <small>Order</small>
+              #${order.id}
+            </div>
+            <div class="order-info">
+              <div class="order-info-top">
+                <span class="status-pill ${statusClass}">${order.status}</span>
+                <span class="order-time">🕐 ${timeStr}</span>
+              </div>
+              <div class="items-summary">${itemsHTML}</div>
+              <div style="margin-top:6px;">
+                <span class="order-total">${order.total_price.toFixed(2)} EGP</span>
+              </div>
+            </div>
+          </div>`;
+            }).join('');
+        }
+
+        function selectOrder(orderId) {
+            selectedOrder = orders.find(o => o.id === orderId);
+            if (!selectedOrder) return;
+            selectedMethod = null;
+
+            // Update queue highlight
+            renderQueue();
+
+            // Show receipt
+            document.getElementById('checkout-empty').style.display = 'none';
+            document.getElementById('checkout-receipt').style.display = 'flex';
+            document.getElementById('checkout-receipt').style.flexDirection = 'column';
+
+            document.getElementById('receipt-order-num').textContent = `Order #${selectedOrder.id}`;
+            const timeStr = selectedOrder.started_at
+                ? new Date(selectedOrder.started_at).toLocaleString()
+                : '—';
+            document.getElementById('receipt-time').textContent = timeStr;
+
+            // Items list
+            const itemsList = document.getElementById('receipt-items-list');
+            itemsList.innerHTML = selectedOrder.items.map(item => `
+        <div class="receipt-item">
+          <span class="receipt-item-name">${item.name_en} <span class="receipt-item-qty">× ${item.quantity}</span></span>
+          <span class="receipt-item-price">${(item.unit_price * item.quantity).toFixed(2)} EGP</span>
+        </div>
+      `).join('');
+
+            document.getElementById('receipt-total').textContent = `${selectedOrder.total_price.toFixed(2)} EGP`;
+
+            // Reset payment selection
+            document.querySelectorAll('.pay-method-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('cash-section').classList.remove('visible');
+            document.getElementById('cash-input').value = '';
+            document.getElementById('change-display').style.display = 'none';
+            document.getElementById('process-pay-btn').disabled = true;
+
+            // Build quick cash amount buttons
+            const total = selectedOrder.total_price;
+            const quickAmounts = [
+                Math.ceil(total / 10) * 10,
+                Math.ceil(total / 50) * 50,
+                Math.ceil(total / 100) * 100
+            ].filter((v, i, a) => a.indexOf(v) === i && v >= total);
+
+            document.getElementById('quick-amounts').innerHTML = quickAmounts.map(a =>
+                `<button class="quick-amt-btn" onclick="setTendered(${a})">${a} EGP</button>`
+            ).join('');
+        }
+
+        function selectPayMethod(method) {
+            selectedMethod = method;
+            document.querySelectorAll('.pay-method-btn').forEach(b => {
+                b.classList.toggle('selected', b.dataset.method === method);
+            });
+
+            const cashSection = document.getElementById('cash-section');
+            if (method === 'cash') {
+                cashSection.classList.add('visible');
+                document.getElementById('process-pay-btn').disabled = true; // require tendered entry
+            } else {
+                cashSection.classList.remove('visible');
+                document.getElementById('process-pay-btn').disabled = false;
+            }
+        }
+
+        function setTendered(amount) {
+            document.getElementById('cash-input').value = amount;
+            updateChange();
+        }
+
+        function updateChange() {
+            const tendered = parseFloat(document.getElementById('cash-input').value) || 0;
+            const total = selectedOrder ? selectedOrder.total_price : 0;
+            const change = tendered - total;
+
+            const changeDisplay = document.getElementById('change-display');
+            const changeAmountEl = document.getElementById('change-amount');
+
+            if (tendered >= total) {
+                changeDisplay.style.display = 'flex';
+                changeAmountEl.textContent = `${change.toFixed(2)} EGP`;
+                document.getElementById('process-pay-btn').disabled = false;
+            } else {
+                changeDisplay.style.display = 'none';
+                document.getElementById('process-pay-btn').disabled = true;
+            }
+        }
+
+        async function processPayment() {
+            if (!selectedOrder || !selectedMethod) return;
+
+            const btn = document.getElementById('process-pay-btn');
+            btn.disabled = true;
+            btn.textContent = 'Processing…';
+
+            const tendered = parseFloat(document.getElementById('cash-input').value) || null;
+            const payload = {
+                payment_method: selectedMethod,
+                amount_tendered: selectedMethod === 'cash' ? tendered : null
+            };
+
+            try {
+                const res = await fetch(`${API}/orders/${selectedOrder.id}/pay`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) throw new Error(await res.text());
+                const result = await res.json();
+
+                // Success overlay
+                const overlay = document.getElementById('success-overlay');
+                document.getElementById('success-detail').textContent =
+                    `Order #${result.order_id} | ${result.payment_method.toUpperCase()} | ${result.total_price.toFixed(2)} EGP`;
+
+                const changeEl = document.getElementById('success-change-display');
+                if (result.change !== null && result.change >= 0) {
+                    changeEl.textContent = `Change: ${result.change.toFixed(2)} EGP`;
+                    changeEl.style.display = 'block';
+                } else {
+                    changeEl.style.display = 'none';
+                }
+
+                overlay.classList.add('visible');
+
+            } catch (err) {
+                console.error('Payment failed:', err);
+                btn.disabled = false;
+                btn.textContent = '✓ Process Payment';
+                alert('Payment failed. Please check the server connection and try again.');
+            }
+        }
+
+        async function cancelOrder() {
+            if (!selectedOrder) return;
+            if (!confirm(`Are you sure you want to cancel Order #${selectedOrder.id}?`)) return;
+
+            const btn = document.getElementById('cancel-order-btn');
+            const payBtn = document.getElementById('process-pay-btn');
+            btn.disabled = true;
+            payBtn.disabled = true;
+            const originalText = btn.innerHTML;
+            btn.textContent = 'Cancelling…';
+
+            try {
+                const res = await fetch(`${API}/orders/${selectedOrder.id}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'cancelled' })
+                });
+
+                if (!res.ok) throw new Error(await res.text());
+
+                // Reset panel
+                selectedOrder = null;
+                selectedMethod = null;
+                document.getElementById('checkout-empty').style.display = 'flex';
+                document.getElementById('checkout-receipt').style.display = 'none';
+
+                // Reload queue
+                loadOrders();
+            } catch (err) {
+                console.error('Failed to cancel order:', err);
+                btn.disabled = false;
+                payBtn.disabled = false;
+                btn.innerHTML = originalText;
+                alert('Failed to cancel order. Please check connection and try again.');
+            }
+        }
+
+        function dismissSuccess() {
+            document.getElementById('success-overlay').classList.remove('visible');
+            // Reset panel
+            selectedOrder = null;
+            selectedMethod = null;
+            document.getElementById('checkout-empty').style.display = 'flex';
+            document.getElementById('checkout-receipt').style.display = 'none';
+            // Reload queue
+            loadOrders();
+        }
+
+        // Boot via SSE / fallback polling
+        window.onload = () => {
+            loadOrders();
+            HoloEvents.init((evt) => {
+                if (evt.type === 'order_update' || evt.type === 'poll_tick') {
+                    loadOrders();
+                }
+            });
+        };
+    </script>
+    <script src="events.js"></script>
+    <script src="nav.js"></script>
+    <script>HoloNav.init('cashier');</script>
+</body>
+
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HoloMenu Kiosk — Touchless Gesture Ordering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Tajawal:wght@300;500;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Background ambient grid -->
+  <div class="hologram-grid"></div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       SCREEN: IDLE / ATTRACT
+       ════════════════════════════════════════════════════════════ -->
+  <section id="idle-screen" class="kiosk-screen active">
+    <div class="idle-brand">
+      <span class="brand-hologram">HoloMenu</span>
+      <span class="brand-sub">Holographic Gesture Kiosk</span>
+    </div>
+    <div class="idle-attract">
+      <div class="attract-pulse-ring"></div>
+      <div class="attract-icon">✋</div>
+    </div>
+    <p class="idle-hint EN-only">Wave your hand or press START to begin</p>
+    <p class="idle-hint AR-only">حرّك يدك أو اضغط ابدأ للبدء</p>
+    <button id="start-order-btn" class="start-btn glow-btn">
+      <span class="EN-only">▶ START ORDER</span>
+      <span class="AR-only">▶ ابدأ الطلب</span>
+    </button>
+    <div id="conn-status" class="status-badge status-disconnected idle-badge">
+      <span class="status-dot"></span>
+      <span id="status-text">Client Idle</span>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       SCREEN: DEPARTMENT SELECTION
+       ════════════════════════════════════════════════════════════ -->
+  <section id="dept-screen" class="kiosk-screen">
+    <header class="kiosk-header">
+      <div class="brand">
+        <span class="brand-hologram">HoloMenu</span>
+        <span class="brand-sub">Holographic Kiosk V2</span>
+      </div>
+      <div class="header-controls">
+        <button id="lang-toggle" class="glass-btn">
+          <span class="lang-text EN-only">العربية</span>
+          <span class="lang-text AR-only">English</span>
+        </button>
+        <div class="cart-indicator glass-panel" id="cart-indicator-btn">
+          <span class="cart-icon">🛒</span>
+          <span id="cart-count">0</span>
+        </div>
+        <div class="status-badge" id="dept-conn-badge">
+          <span class="status-dot"></span>
+          <span id="dept-status-text">Vision Live</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="dept-stage">
+      <h2 class="dept-heading EN-only">Choose a Category</h2>
+      <h2 class="dept-heading AR-only">اختر القسم</h2>
+      <div id="dept-buttons" class="dept-grid">
+        <!-- Dynamically populated from API -->
+      </div>
+      <p class="dwell-hint EN-only">👆 Point & hold for 1.3s to select</p>
+      <p class="dwell-hint AR-only">👆 أشِر واثبت ١.٣ ثانية للاختيار</p>
+    </div>
+
+    <!-- Hand Pointer (visible in both dept + product screens) -->
+    <div id="hand-pointer" class="hand-pointer">
+      <svg viewBox="0 0 24 24" width="48" height="48">
+        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-dasharray="4 2" stroke-width="2" />
+        <circle cx="12" cy="12" r="3" fill="currentColor" />
+      </svg>
+      <div class="hand-pointer-ripple"></div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       SCREEN: PRODUCT BROWSE
+       ════════════════════════════════════════════════════════════ -->
+  <section id="product-screen" class="kiosk-screen">
+    <header class="kiosk-header">
+      <div class="brand">
+        <span class="brand-hologram">HoloMenu</span>
+        <span id="current-dept-label" class="brand-sub">Burgers</span>
+      </div>
+      <div class="header-controls">
+        <button id="back-to-depts-btn" class="glass-btn">
+          <span class="EN-only">◀ Categories</span>
+          <span class="AR-only">◀ الأقسام</span>
+        </button>
+        <button id="lang-toggle-2" class="glass-btn">
+          <span class="lang-text EN-only">العربية</span>
+          <span class="lang-text AR-only">English</span>
+        </button>
+        <div class="cart-indicator glass-panel" id="cart-indicator-btn-2">
+          <span class="cart-icon">🛒</span>
+          <span id="cart-count-2">0</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="hologram-stage">
+      <!-- Left: Gesture Guide -->
+      <aside class="side-panel left-panel glass-panel">
+        <h3 class="panel-title" data-en="Gesture Help" data-ar="دليل الإيماءات">Gesture Help</h3>
+        <ul class="gesture-list">
+          <li>
+            <span class="gesture-icon">↔️</span>
+            <div class="gesture-desc">
+              <strong data-en="Swipe Left / Right" data-ar="تمرير يسار / يمين">Swipe Left / Right</strong>
+              <span data-en="Browse products" data-ar="تصفح المنتجات">Browse products</span>
+            </div>
+          </li>
+          <li>
+            <span class="gesture-icon">✋</span>
+            <div class="gesture-desc">
+              <strong data-en="Open Palm" data-ar="كف مفتوح">Open Palm</strong>
+              <span data-en="View details" data-ar="عرض التفاصيل">View details</span>
+            </div>
+          </li>
+          <li>
+            <span class="gesture-icon">✊</span>
+            <div class="gesture-desc">
+              <strong data-en="Closed Fist" data-ar="قبضة مغلقة">Closed Fist</strong>
+              <span data-en="Hide details" data-ar="إخفاء التفاصيل">Hide details</span>
+            </div>
+          </li>
+          <li>
+            <span class="gesture-icon">👌</span>
+            <div class="gesture-desc">
+              <strong data-en="Pinch Fingers" data-ar="قرصة الأصابع">Pinch Fingers</strong>
+              <span data-en="Select / Show QR" data-ar="تحديد / عرض الكود">Select / Show QR</span>
+            </div>
+          </li>
+          <li>
+            <span class="gesture-icon">👍</span>
+            <div class="gesture-desc">
+              <strong data-en="Thumbs Up" data-ar="إبهام للأعلى">Thumbs Up</strong>
+              <span data-en="Add to Cart" data-ar="إضافة للسلة">Add to Cart</span>
+            </div>
+          </li>
+        </ul>
+        <div class="calibration-tip">
+          <span data-en="Keep hand 30-60cm from camera." data-ar="حافظ على مسافة ٣٠-٦٠ سم.">Keep hand 30-60cm from
+            camera.</span>
+        </div>
+      </aside>
+
+      <!-- Center: Product Carousel -->
+      <section class="center-stage">
+        <div id="hand-pointer-product" class="hand-pointer">
+          <svg viewBox="0 0 24 24" width="48" height="48">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-dasharray="4 2" stroke-width="2" />
+            <circle cx="12" cy="12" r="3" fill="currentColor" />
+          </svg>
+          <div class="hand-pointer-ripple"></div>
+        </div>
+
+        <div class="carousel-container">
+          <div class="product-carousel" id="product-carousel">
+            <div class="hologram-viewport">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="product-title-card glass-panel" id="product-title-card">
+          <div class="carousel-dots" id="carousel-dots"></div>
+          <h1 id="curr-product-name" class="product-name">Loading...</h1>
+          <p id="curr-product-price" class="product-price">-- EGP</p>
+          <div class="nav-hints">
+            <span class="hint-arrow">←</span>
+            <span data-en="SWIPE" data-ar="مرر يدك">SWIPE</span>
+            <span class="hint-arrow">→</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Details Panel -->
+      <aside class="side-panel right-panel glass-panel" id="product-details-panel">
+        <div class="panel-empty-state" id="details-empty-state">
+          <div class="glowing-orb"></div>
+          <p data-en="Show Open Palm ✋ to reveal product details" data-ar="افتح كف يدك ✋ لعرض تفاصيل المنتج">Show Open
+            Palm ✋ to reveal product details</p>
+        </div>
+        <div class="details-content hidden" id="details-content">
+          <div class="details-header">
+            <span class="category-tag" id="detail-category">—</span>
+            <h2 id="detail-title">—</h2>
+            <div class="price-badge" id="detail-price">—</div>
+          </div>
+          <p class="description" id="detail-desc"></p>
+          <table class="nutritional-table">
+            <tr>
+              <th data-en="Calories" data-ar="السعرات">Calories</th>
+              <td id="detail-calories">—</td>
+            </tr>
+            <tr>
+              <th data-en="Allergens" data-ar="الحساسية">Allergens</th>
+              <td id="detail-allergens">—</td>
+            </tr>
+          </table>
+          <div class="detail-divider"></div>
+          <h4 data-en="Ingredients" data-ar="المكونات">Ingredients</h4>
+          <div class="ingredients-tags" id="detail-ingredients"></div>
+          <div class="action-alert-hint">
+            <div class="mini-gesture-badge">👍</div>
+            <span data-en="Thumbs-up to add to cart" data-ar="إبهام للأعلى للإضافة للسلة">Thumbs-up to add to
+              cart</span>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════════
+       GLOBAL: Gesture HUD Notification
+       ════════════════════════════════════════════════════════════ -->
+  <div id="gesture-hud" class="gesture-hud">
+    <span class="hud-emoji">✋</span>
+    <span class="hud-text">GESTURE</span>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       GLOBAL: Engine Health Overlay (dev diagnostics)
+       ════════════════════════════════════════════════════════════ -->
+  <div id="engine-health-hud" style="
+    position: fixed; bottom: 60px; left: 12px; z-index: 9999;
+    background: rgba(0,0,0,0.75); border: 1px solid rgba(0,240,255,0.2);
+    border-radius: 8px; padding: 8px 12px; font-family: 'Outfit', monospace;
+    font-size: 11px; color: #a0aec0; line-height: 1.6;
+    pointer-events: none; backdrop-filter: blur(6px);
+    transition: opacity 0.3s;
+  ">
+    <div style="color:#00f0ff; font-weight:600; margin-bottom:2px;">🔧 ENGINE STATUS</div>
+    <div>📷 Camera: <span id="hud-camera" style="color:#f56565">—</span></div>
+    <div>🧠 MediaPipe: <span id="hud-mediapipe" style="color:#f56565">—</span></div>
+    <div>✋ Hand: <span id="hud-hand" style="color:#a0aec0">—</span></div>
+    <div>🎯 Mode: <span id="hud-mode" style="color:#a0aec0">—</span></div>
+    <div>⚡ Gesture: <span id="hud-gesture" style="color:#a0aec0">—</span></div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       MODAL: Cart
+       ════════════════════════════════════════════════════════════ -->
+  <div id="cart-modal" class="kiosk-modal hidden">
+    <div class="modal-content glass-panel">
+      <button class="close-btn" id="close-cart-btn">×</button>
+      <h2 data-en="Your Order Cart" data-ar="سلة طلباتك">Your Order Cart</h2>
+      <div class="cart-items-list" id="cart-items-list"></div>
+      <div class="cart-total-section">
+        <span data-en="Total" data-ar="الإجمالي">Total</span>
+        <span id="cart-total-price">0 EGP</span>
+      </div>
+      <div class="cart-actions">
+        <button class="glass-btn glow-btn" id="add-more-btn">
+          <span class="EN-only">+ Add More</span>
+          <span class="AR-only">+ أضف المزيد</span>
+        </button>
+        <button class="glass-btn glow-btn confirm-btn" id="confirm-order-btn">
+          <span class="EN-only">✓ Confirm Order</span>
+          <span class="AR-only">✓ تأكيد الطلب</span>
+        </button>
+      </div>
+      <div class="order-qr-container">
+        <div class="qr-block glass-panel">
+          <canvas id="cart-qrcode"></canvas>
+          <div class="qr-label" data-en="Scan to Checkout" data-ar="امسح لإكمال الدفع">Scan to Checkout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       MODAL: Product QR
+       ════════════════════════════════════════════════════════════ -->
+  <div id="product-qr-modal" class="kiosk-modal hidden">
+    <div class="modal-content glass-panel checkout-modal-content">
+      <button class="close-btn" id="close-product-qr-btn">×</button>
+      <h2 id="qr-product-title">Product Name</h2>
+      <p class="subtitle" data-en="Scan to order directly:" data-ar="امسح رابط الطلب مباشرة:">Scan to order directly:
+      </p>
+      <div class="qr-block glass-panel large-qr-block">
+        <canvas id="product-qrcode"></canvas>
+        <div class="qr-label" id="qr-product-url">https://example.com</div>
+      </div>
+      <p class="action-instruction" data-en="Closed fist ✊ to resume browsing" data-ar="اعمل قبضة يد مغلقة ✊ للعودة">
+        Closed fist ✊ to resume browsing</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       MODAL: Order Complete
+       ════════════════════════════════════════════════════════════ -->
+  <div id="order-complete-modal" class="kiosk-modal hidden">
+    <div class="modal-content glass-panel order-complete-content">
+      <div class="success-icon">✅</div>
+      <h2 data-en="Order Confirmed!" data-ar="تم تأكيد الطلبك!">Order Confirmed!</h2>
+      <h3 id="order-complete-number"
+        style="font-size: 2.2rem; font-weight: 900; margin: 15px 0; color: var(--glow-blue); text-shadow: 0 0 15px rgba(0, 240, 255, 0.4);">
+        Order #--</h3>
+      <p data-en="Scan QR to track your order" data-ar="امسح الكود لتتبع طلبك">Scan QR to track your order</p>
+      <div class="qr-block glass-panel large-qr-block">
+        <canvas id="confirm-qrcode"></canvas>
+      </div>
+      <div id="order-countdown" class="countdown-bar">
+        <div id="order-countdown-fill" class="countdown-fill"></div>
+      </div>
+      <p class="countdown-label EN-only">Returning to home screen...</p>
+      <p class="countdown-label AR-only">العودة إلى الشاشة الرئيسية...</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       GESTURE SIMULATOR PANEL (bottom drawer)
+       ════════════════════════════════════════════════════════════ -->
+  <div class="simulator-drawer collapsed" id="simulator-drawer">
+    <div class="simulator-toggle" id="simulator-toggle-btn">
+      <span class="sim-title">🛠️ GESTURE SIMULATOR PANEL</span>
+      <span class="sim-caret">▲</span>
+    </div>
+    <div class="simulator-body">
+      <div class="sim-section">
+        <h4>WebSocket</h4>
+        <div class="sim-row">
+          <input type="text" id="sim-ws-url" value="ws://127.0.0.1:8766">
+          <button class="sim-btn glow-cyan" id="sim-btn-connect">Connect</button>
+        </div>
+        <div class="sim-status">
+          Status: <strong id="sim-status-label" class="text-disconnected">Disconnected</strong>
+        </div>
+      </div>
+
+      <div class="sim-section">
+        <h4>Engine Mode</h4>
+        <div class="sim-row">
+          <button class="sim-btn" id="sim-start-order">▶ Start Order (ACTIVE)</button>
+          <button class="sim-btn" id="sim-end-session">⏹ End Session (IDLE)</button>
+        </div>
+      </div>
+
+      <div class="sim-section">
+        <h4>Simulate Hand Pointer</h4>
+        <div class="sim-coords-pad" id="sim-coords-pad">
+          <span class="pad-label">Move inside to simulate hand</span>
+          <div class="pad-cursor" id="pad-cursor"></div>
+        </div>
+        <div class="sim-coords-text">
+          X: <span id="sim-coord-x">0.50</span>, Y: <span id="sim-coord-y">0.50</span>
+        </div>
+      </div>
+
+      <div class="sim-section">
+        <h4>Simulate Gestures</h4>
+        <div class="sim-grid">
+          <button class="sim-action-btn" data-gesture="SWIPE_LEFT">◀ Swipe Left</button>
+          <button class="sim-action-btn" data-gesture="SWIPE_RIGHT">Swipe Right ▶</button>
+          <button class="sim-action-btn" data-gesture="OPEN_PALM">✋ Open Palm</button>
+          <button class="sim-action-btn" data-gesture="CLOSED_FIST">✊ Closed Fist</button>
+          <button class="sim-action-btn" data-gesture="PINCH">👌 Pinch</button>
+          <button class="sim-action-btn" data-gesture="THUMBS_UP">👍 Thumbs Up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>
