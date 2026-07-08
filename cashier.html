@@ -717,8 +717,9 @@
         </div>
     </div>
 
+    <script src="assets/js/api-client.js"></script>
     <script>
-        const API = 'http://127.0.0.1:8081/api';
+        const API = HoloApi.API_BASE;
         let orders = [];
         let selectedOrder = null;
         let selectedMethod = null;
@@ -736,8 +737,7 @@
 
         async function loadOrders() {
             try {
-                const res = await fetch(`${API}/cashier/orders`);
-                orders = await res.json();
+                orders = await HoloApi.getCashierOrders();
                 renderQueue();
             } catch (e) {
                 console.error('Failed to load orders:', e);
@@ -896,14 +896,7 @@
             };
 
             try {
-                const res = await fetch(`${API}/orders/${selectedOrder.id}/pay`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!res.ok) throw new Error(await res.text());
-                const result = await res.json();
+                const result = await HoloApi.payOrder(selectedOrder.id, payload);
 
                 // Success overlay
                 const overlay = document.getElementById('success-overlay');
@@ -940,13 +933,7 @@
             btn.textContent = 'Cancelling…';
 
             try {
-                const res = await fetch(`${API}/orders/${selectedOrder.id}/status`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: 'cancelled' })
-                });
-
-                if (!res.ok) throw new Error(await res.text());
+                await HoloApi.updateOrderStatus(selectedOrder.id, 'cancelled');
 
                 // Reset panel
                 selectedOrder = null;
