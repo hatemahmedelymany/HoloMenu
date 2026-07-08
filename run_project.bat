@@ -12,9 +12,9 @@ start "HoloHost: Frontend 8080" cmd /k "python -m http.server 8080"
 :: 2. Start Backend API
 echo [+] Starting FastAPI Backend on http://127.0.0.1:8081...
 if exist .venv\Scripts\activate.bat (
-    start "HoloHost: Backend 8081" cmd /k "call .venv\Scripts\activate.bat && cd backend && uvicorn main:app --port 8081 --reload"
+    start "HoloHost: Backend 8081" cmd /k "call .venv\Scripts\activate.bat && uvicorn backend.main:app --port 8081 --reload"
 ) else (
-    start "HoloHost: Backend 8081" cmd /k "cd backend && uvicorn main:app --port 8081 --reload"
+    start "HoloHost: Backend 8081" cmd /k "uvicorn backend.main:app --port 8081 --reload"
 )
 
 :: 3. Start Gesture Recognition Engine
