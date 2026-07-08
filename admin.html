@@ -686,8 +686,9 @@
         </div>
     </main>
 
+    <script src="assets/js/api-client.js"></script>
     <script>
-        const API_BASE = 'http://127.0.0.1:8081/api';
+        const API_BASE = HoloApi.API_BASE;
         let departments = [];
         let products = [];
         let historicalOrders = [];
@@ -713,8 +714,7 @@
 
         async function loadConfig() {
             try {
-                const resDept = await fetch(`${API_BASE}/departments`);
-                departments = await resDept.json();
+                departments = await HoloApi.getDepartments();
 
                 // Populate select list in product editor
                 const select = document.getElementById('prod-category');
@@ -733,8 +733,7 @@
             try {
                 let htmlList = '';
                 for (const dept of departments) {
-                    const res = await fetch(`${API_BASE}/departments/${dept.id}/products`);
-                    const items = await res.json();
+                    const items = await HoloApi.getProductsByDept(dept.id);
                     if (!items || items.length === 0) continue;
 
                     products.push(...items);
@@ -815,11 +814,7 @@
             };
 
             try {
-                await fetch(`${API_BASE}/products/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+                await HoloApi.updateProduct(id, payload);
             } catch (e) { console.error('Failed to toggle product availability:', e); }
         }
 
@@ -878,24 +873,20 @@
             };
 
             try {
-                const url = id ? `${API_BASE}/products/${id}` : `${API_BASE}/products`;
-                const method = id ? 'PUT' : 'POST';
-                const res = await fetch(url, {
-                    method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (res.ok) {
-                    resetProductForm();
-                    loadProducts();
+                if (id) {
+                    await HoloApi.updateProduct(id, payload);
+                } else {
+                    await HoloApi.createProduct(payload);
                 }
+                resetProductForm();
+                loadProducts();
             } catch (err) { console.error('Failed saving product:', err); }
         });
 
         async function deleteProduct(id) {
             if (!confirm('Hide this product from the menu catalog?')) return;
             try {
-                await fetch(`${API_BASE}/products/${id}`, { method: 'DELETE' });
+                await HoloApi.deleteProduct(id);
                 loadProducts();
             } catch (e) { console.error(e); }
         }
@@ -905,8 +896,7 @@
             const tbody = document.getElementById('dept-table-body');
             tbody.innerHTML = '<tr><td colspan="5">Loading departments...</td></tr>';
             try {
-                const res = await fetch(`${API_BASE}/departments`);
-                departments = await res.json();
+                departments = await HoloApi.getDepartments();
 
                 tbody.innerHTML = departments.map(d => `
           <tr>
@@ -969,25 +959,21 @@
             };
 
             try {
-                const url = id ? `${API_BASE}/departments/${id}` : `${API_BASE}/departments`;
-                const method = id ? 'PUT' : 'POST';
-                const res = await fetch(url, {
-                    method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (res.ok) {
-                    resetDeptForm();
-                    loadDepartmentsList();
-                    loadConfig(); // Refresh categories select
+                if (id) {
+                    await HoloApi.updateDepartment(id, payload);
+                } else {
+                    await HoloApi.createDepartment(payload);
                 }
+                resetDeptForm();
+                loadDepartmentsList();
+                loadConfig(); // Refresh categories select
             } catch (err) { console.error('Failed saving department:', err); }
         });
 
         async function deleteDepartment(id) {
             if (!confirm('Are you sure you want to deactivate/delete this department?')) return;
             try {
-                await fetch(`${API_BASE}/departments/${id}`, { method: 'DELETE' });
+                await HoloApi.deleteDepartment(id);
                 loadDepartmentsList();
                 loadConfig();
             } catch (e) { console.error(e); }
@@ -999,8 +985,7 @@
             tbody.innerHTML = '<tr><td colspan="6">Loading orders...</td></tr>';
 
             try {
-                const res = await fetch(`${API_BASE}/admin/orders`);
-                historicalOrders = await res.json();
+                historicalOrders = await HoloApi.getAdminOrders();
 
                 tbody.innerHTML = historicalOrders.map(order => {
                     // Status styling classes
@@ -1052,11 +1037,7 @@
         async function voidOrder(orderId) {
             if (!confirm(`Void Order #${orderId}?`)) return;
             try {
-                await fetch(`${API_BASE}/orders/${orderId}/status`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: 'cancelled' })
-                });
+                await HoloApi.updateOrderStatus(orderId, 'cancelled');
                 loadOrderHistory();
             } catch (e) { console.error(e); }
         }
@@ -1065,8 +1046,7 @@
         async function loadAnalyticsStats() {
             try {
                 // Fetch counters and popular items
-                const resStats = await fetch(`${API_BASE}/admin/stats`);
-                const stats = await resStats.json();
+                const stats = await HoloApi.getAdminStats();
 
                 // 1. KPI cards rendering
                 document.getElementById('kpi-revenue').textContent = `${stats.total_revenue.toFixed(2)} EGP`;
@@ -1091,8 +1071,7 @@
                 }
 
                 // 3. Interactions Event Log render
-                const resLogs = await fetch(`${API_BASE}/analytics/summary`);
-                const summary = await resLogs.json();
+                const summary = await HoloApi.getAnalyticsSummary();
                 const evtsBody = document.getElementById('analytics-events-body');
                 if (summary.length === 0) {
                     evtsBody.innerHTML = '<tr><td colspan="2" style="text-align:center">No interaction logs yet</td></tr>';
