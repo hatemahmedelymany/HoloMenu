@@ -481,15 +481,13 @@
         <footer class="portal-footer">HoloMenu System v2.0 &nbsp;·&nbsp; All Stations Connected</footer>
     </div>
 
+    <script src="assets/js/api-client.js"></script>
     <script>
-        const API = 'http://127.0.0.1:8081/api';
+        const API = HoloApi.API_BASE;
 
         async function fetchStatus() {
             try {
-                const res = await fetch(`${API}/health`);
-                if (!res.ok) throw new Error('offline');
-                const data = await res.json();
-
+                const data = await HoloApi.getHealth();
                 // Status row
                 document.getElementById('sys-dot').classList.add('online', 'pulse');
                 document.getElementById('sys-label').textContent = 'System Online';
