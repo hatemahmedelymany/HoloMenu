@@ -4,7 +4,7 @@
  * Usage: import and call HoloEvents.init(onEvent)
  */
 const HoloEvents = (() => {
-    const API = 'http://127.0.0.1:8081/api';
+    const API = HoloApi.API_BASE;
     let evtSource = null;
     let pollTimer = null;
     let _onEvent = null;
