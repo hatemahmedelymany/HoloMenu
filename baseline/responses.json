@@ -1,29 +1,34 @@
 {
-  "captured_at": "2026-07-08T07:05:08",
-  "total_endpoints": 45,
+  "captured_at": "2026-07-08T13:27:35",
+  "total_endpoints": 44,
   "raw_results": [
     {
       "method": "GET",
       "path": "/api/health",
-      "status_code": 404,
+      "status_code": 200,
       "body": {
-        "detail": "Not Found"
+        "status": "ok",
+        "database": "connected",
+        "status_counts": {
+          "pending": 9,
+          "confirmed": 33,
+          "completed": 4,
+          "cancelled": 47
+        }
       }
     },
     {
       "method": "GET",
       "path": "/api/metrics",
-      "status_code": 404,
-      "body": {
-        "detail": "Not Found"
-      }
+      "status_code": 200,
+      "body": "# HELP python_gc_objects_collected_total Objects collected during gc\n# TYPE python_gc_objects_collected_total counter\npython_gc_objects_collected_total{generation=\"0\"} 557.0\npython_gc_objects_collected_total{generation=\"1\"} 52.0\npython_gc_objects_collected_total{generation=\"2\"} 6.0\n# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC\n# TYPE python_gc_objects_uncollectable_total counter\npython_gc_objects_uncollectable_total{generation=\"0\"} 0.0\npython_gc_objects_uncol"
     },
     {
       "method": "POST",
       "path": "/api/auth/login",
       "status_code": 200,
       "body": {
-        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidGVuYW50X2lkIjoiZDQ0NDQ0NDQtNDQ0NC00NDQ0LTQ0NDQtNDQ0NDQ0NDQ0NDQ0Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzgzNDg0NDA3LCJ0eXBlIjoiYWNjZXNzIn0.NFFnuCj_OuAwFXpkbZOYuqo3cSND9E4zI_bBKAtn8jc",
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidGVuYW50X2lkIjoiZDQ0NDQ0NDQtNDQ0NC00NDQ0LTQ0NDQtNDQ0NDQ0NDQ0NDQ0Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzgzNTA3MzU0LCJ0eXBlIjoiYWNjZXNzIn0.nSRpoviv9FMnssZ8Dhl2ssHpUH_857_dSvKNFwlsCgA",
         "token_type": "bearer",
         "role": "admin"
       }
@@ -122,6 +127,17 @@
           "created_at": "2026-07-06T20:18:15",
           "updated_at": "2026-07-06T20:18:15",
           "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 31,
+          "name_en": "Updated Dept",
+          "name_ar": "محدث",
+          "icon_path": null,
+          "display_order": 100,
+          "active": 1,
+          "created_at": "2026-07-08T13:26:51",
+          "updated_at": "2026-07-08T13:26:51",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
         }
       ]
     },
@@ -192,6 +208,578 @@
           "created_at": "2026-07-06T20:18:15",
           "updated_at": "2026-07-06T20:18:15",
           "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 10,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": [],
+          "calories": 0,
+          "allergens": [],
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T06:51:20",
+          "updated_at": "2026-07-08T06:51:21",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 11,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": [],
+          "calories": 0,
+          "allergens": [],
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:03:05",
+          "updated_at": "2026-07-08T07:03:05",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 12,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": [],
+          "calories": 0,
+          "allergens": [],
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:04:11",
+          "updated_at": "2026-07-08T07:04:11",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 13,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": [],
+          "calories": 0,
+          "allergens": [],
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:05:08",
+          "updated_at": "2026-07-08T07:05:08",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 14,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": [],
+          "calories": 0,
+          "allergens": [],
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:07:26",
+          "updated_at": "2026-07-08T07:07:26",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 15,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": [],
+          "calories": 0,
+          "allergens": [],
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:15:25",
+          "updated_at": "2026-07-08T07:15:25",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 16,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:20:24",
+          "updated_at": "2026-07-08T07:20:24",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 17,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:24:55",
+          "updated_at": "2026-07-08T07:24:55",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 18,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:26:53",
+          "updated_at": "2026-07-08T07:26:53",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 19,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:30:18",
+          "updated_at": "2026-07-08T07:30:19",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 20,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:33:38",
+          "updated_at": "2026-07-08T07:33:39",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 21,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:34:57",
+          "updated_at": "2026-07-08T07:34:57",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 22,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T07:50:15",
+          "updated_at": "2026-07-08T07:50:15",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 23,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T08:06:52",
+          "updated_at": "2026-07-08T08:06:52",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 24,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T12:09:25",
+          "updated_at": "2026-07-08T12:09:25",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 25,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T12:13:36",
+          "updated_at": "2026-07-08T12:13:36",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 26,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T12:14:38",
+          "updated_at": "2026-07-08T12:14:38",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 27,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T12:15:27",
+          "updated_at": "2026-07-08T12:15:27",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 28,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T12:16:07",
+          "updated_at": "2026-07-08T12:16:07",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 29,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T12:18:33",
+          "updated_at": "2026-07-08T12:18:33",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 30,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T12:19:52",
+          "updated_at": "2026-07-08T12:19:52",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 31,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T12:53:03",
+          "updated_at": "2026-07-08T12:53:03",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 32,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T12:54:28",
+          "updated_at": "2026-07-08T12:54:28",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 33,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T13:05:26",
+          "updated_at": "2026-07-08T13:05:26",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 34,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T13:17:23",
+          "updated_at": "2026-07-08T13:17:23",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 35,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 1,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T13:26:51",
+          "updated_at": "2026-07-08T13:26:51",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
         }
       ]
     },
@@ -250,13 +838,13 @@
       "path": "/api/orders",
       "status_code": 201,
       "body": {
-        "order_uid": "81f16716-34d7-45b2-843a-235b9d031d48",
+        "order_uid": "c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd",
         "status": "pending"
       }
     },
     {
       "method": "POST",
-      "path": "/api/orders/81f16716-34d7-45b2-843a-235b9d031d48/items",
+      "path": "/api/orders/c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd/items",
       "status_code": 201,
       "body": {
         "status": "item_added"
@@ -264,7 +852,7 @@
     },
     {
       "method": "PUT",
-      "path": "/api/orders/81f16716-34d7-45b2-843a-235b9d031d48/items",
+      "path": "/api/orders/c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd/items",
       "status_code": 200,
       "body": {
         "status": "item_updated"
@@ -272,24 +860,15 @@
     },
     {
       "method": "POST",
-      "path": "/api/orders/81f16716-34d7-45b2-843a-235b9d031d48/confirm",
+      "path": "/api/orders/c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd/confirm",
       "status_code": 500,
       "body": "Internal Server Error"
     },
     {
       "method": "POST",
       "path": "/api/orders",
-      "status_code": 201,
-      "body": {
-        "order_uid": "6d534c52-a593-4750-9a54-4a244fb4dad8",
-        "status": "pending"
-      }
-    },
-    {
-      "method": "POST",
-      "path": "/api/orders/6d534c52-a593-4750-9a54-4a244fb4dad8/cancel",
-      "status_code": 500,
-      "body": "Internal Server Error"
+      "status_code": -1,
+      "body": "CONNECTION ERROR: [WinError 10054] An existing connection was forcibly closed by the remote host"
     },
     {
       "method": "POST",
@@ -360,6 +939,673 @@
       "path": "/api/admin/orders",
       "status_code": 200,
       "body": [
+        {
+          "id": 106,
+          "order_uid": "c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:27:35",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 105,
+          "order_uid": "9adbf570-633f-47cb-b70b-65eb79900deb",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:26:51",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 104,
+          "order_uid": "f8e65420-c00f-40ce-8488-60fe68d79e46",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T13:17:23",
+          "completed_at": "2026-07-08T10:17:23",
+          "items": []
+        },
+        {
+          "id": 103,
+          "order_uid": "2947b78b-8e34-421c-8072-c349e1505359",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:17:23",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 101,
+          "order_uid": "d19ec5a1-0520-4362-97c2-4a0e0f41af85",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:05:26",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 102,
+          "order_uid": "e0282766-a194-4618-b79c-9d6d20b5dc72",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T13:05:26",
+          "completed_at": "2026-07-08T10:05:26",
+          "items": []
+        },
+        {
+          "id": 100,
+          "order_uid": "da8fa330-a5b0-4625-a4a7-46229de54093",
+          "status": "confirmed",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T13:00:59",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 99,
+          "order_uid": "53859f52-57e7-4de5-aa0d-1e0cddba73db",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:54:28",
+          "completed_at": "2026-07-08T09:54:28",
+          "items": []
+        },
+        {
+          "id": 98,
+          "order_uid": "90692dad-fc2e-4075-b914-a906834c79e7",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:54:28",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 96,
+          "order_uid": "21ee1065-993c-4112-813c-002b0344eed0",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:53:03",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 97,
+          "order_uid": "d0e19d50-8140-424b-9406-44304dc15ad1",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:53:03",
+          "completed_at": "2026-07-08T09:53:03",
+          "items": []
+        },
+        {
+          "id": 95,
+          "order_uid": "c515ce7e-a12d-4825-ad55-0a2762658626",
+          "status": "confirmed",
+          "total_price": 180.0,
+          "started_at": "2026-07-08T12:49:23",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 94,
+          "order_uid": "fed0eb5b-aa99-4060-94d6-ec6110d683a3",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:24:50",
+          "completed_at": "2026-07-08T09:30:26",
+          "items": []
+        },
+        {
+          "id": 93,
+          "order_uid": "ec2b48d5-6c56-4e63-9d93-cece3bb225b5",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:24:46",
+          "completed_at": "2026-07-08T09:26:01",
+          "items": []
+        },
+        {
+          "id": 92,
+          "order_uid": "e26a8832-6b0b-4d0e-855b-8b2ed37cb428",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:19:52",
+          "completed_at": "2026-07-08T09:19:52",
+          "items": []
+        },
+        {
+          "id": 91,
+          "order_uid": "36c1b0dd-3842-4699-b423-c99c5ff0f5ea",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:19:52",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 90,
+          "order_uid": "9e3251a0-d792-4dcf-9994-d2a47c6a7ed8",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:18:32",
+          "completed_at": "2026-07-08T09:18:32",
+          "items": []
+        },
+        {
+          "id": 89,
+          "order_uid": "519416df-b952-4e42-bffd-f3dd09027dd3",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:18:32",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 88,
+          "order_uid": "0213a8db-60f9-4cde-9082-1b5323837109",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:16:07",
+          "completed_at": "2026-07-08T09:16:07",
+          "items": []
+        },
+        {
+          "id": 87,
+          "order_uid": "dd4a3afc-4a0f-480a-99e4-db793db97897",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:16:07",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 86,
+          "order_uid": "77b843ca-4628-4f8b-baa3-6c6c6b82e956",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:15:27",
+          "completed_at": "2026-07-08T09:15:27",
+          "items": []
+        },
+        {
+          "id": 85,
+          "order_uid": "acccc138-68f3-48ba-892a-1e4216032d0f",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:15:27",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 83,
+          "order_uid": "780379d6-a7f2-453b-8bd2-a073cc014d90",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:14:38",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 84,
+          "order_uid": "9b245e8a-f996-44be-9427-5f989985c80c",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:14:38",
+          "completed_at": "2026-07-08T09:14:38",
+          "items": []
+        },
+        {
+          "id": 82,
+          "order_uid": "4cf3f246-40a7-434c-a7d7-862aea752ba0",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:13:36",
+          "completed_at": "2026-07-08T09:13:36",
+          "items": []
+        },
+        {
+          "id": 81,
+          "order_uid": "a85558b0-14a5-4301-afe4-5089c2897ab6",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:13:36",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 80,
+          "order_uid": "c1cfd01b-e8c1-4935-894e-a960b1e17895",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:09:25",
+          "completed_at": "2026-07-08T09:09:25",
+          "items": []
+        },
+        {
+          "id": 79,
+          "order_uid": "836ee5f5-5149-4969-8d0d-4b82dac6a4c0",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:09:25",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 78,
+          "order_uid": "6c5fc4f0-a1be-4255-a6c3-ef54f848451d",
+          "status": "confirmed",
+          "total_price": 160.0,
+          "started_at": "2026-07-08T08:18:17",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 1,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون",
+              "unit_price": 160.0
+            }
+          ]
+        },
+        {
+          "id": 77,
+          "order_uid": "d50e4fd8-83be-42d2-84d2-a1ccfb79f538",
+          "status": "confirmed",
+          "total_price": 320.0,
+          "started_at": "2026-07-08T08:13:14",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 2,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون",
+              "unit_price": 160.0
+            }
+          ]
+        },
+        {
+          "id": 76,
+          "order_uid": "f40c1842-13d4-4123-8cf4-1a991c37c815",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T08:06:52",
+          "completed_at": "2026-07-08T05:06:52",
+          "items": []
+        },
+        {
+          "id": 75,
+          "order_uid": "8b7c1d0d-d6b6-44fe-9ccd-9ff9b334b8e1",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T08:06:52",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 74,
+          "order_uid": "b9146125-e284-4e74-a75a-71f8f2867713",
+          "status": "pending",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T08:06:10",
+          "completed_at": null,
+          "items": []
+        },
+        {
+          "id": 73,
+          "order_uid": "99ab3ecf-84d5-45e2-ae2b-83aded2f51b2",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:50:15",
+          "completed_at": "2026-07-08T04:50:15",
+          "items": []
+        },
+        {
+          "id": 72,
+          "order_uid": "2e0c51d3-ef55-4828-812e-e13e04811179",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:50:14",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 71,
+          "order_uid": "e802d9a6-2eeb-4e6b-87bc-a776aa6f2678",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:34:56",
+          "completed_at": "2026-07-08T04:34:56",
+          "items": []
+        },
+        {
+          "id": 70,
+          "order_uid": "2eb67428-9067-41cc-816b-185d4799175c",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:34:56",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 69,
+          "order_uid": "9a4583c3-febf-48ad-b411-ca09783630e2",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:33:38",
+          "completed_at": "2026-07-08T04:33:38",
+          "items": []
+        },
+        {
+          "id": 68,
+          "order_uid": "7c77820e-d44a-4772-89d9-7d1fe359eafa",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:33:38",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 66,
+          "order_uid": "9d78aa0f-8645-4baa-b9e5-d49ea4d5cb32",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:30:18",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 67,
+          "order_uid": "4616adcd-746e-4ef3-a4b2-06c977fb3829",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:30:18",
+          "completed_at": "2026-07-08T04:30:18",
+          "items": []
+        },
+        {
+          "id": 65,
+          "order_uid": "4686c914-f25b-4960-a5fa-8453c512b840",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:26:53",
+          "completed_at": "2026-07-08T04:26:53",
+          "items": []
+        },
+        {
+          "id": 64,
+          "order_uid": "84deba95-e0a3-4aae-8828-ce36fc96b6db",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:26:53",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 63,
+          "order_uid": "4598c8dc-77a9-4c5e-810a-7097a6e3393b",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:24:55",
+          "completed_at": "2026-07-08T04:24:55",
+          "items": []
+        },
+        {
+          "id": 62,
+          "order_uid": "e9acf978-9363-4e58-a053-656d493bde17",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:24:55",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 61,
+          "order_uid": "de5837e0-674c-4e6e-9c49-b3e36bc50d6d",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:20:23",
+          "completed_at": "2026-07-08T04:20:23",
+          "items": []
+        },
+        {
+          "id": 60,
+          "order_uid": "caa3d094-f66a-48d6-aa75-cacaa867d028",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:20:23",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 59,
+          "order_uid": "f2c3b0cb-09f9-4ad2-a355-996c307e0d79",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:15:25",
+          "completed_at": "2026-07-08T04:15:25",
+          "items": []
+        },
+        {
+          "id": 58,
+          "order_uid": "626337eb-d405-424d-9eb9-55faa8411433",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:15:24",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 57,
+          "order_uid": "c5e4c23d-8379-4700-b00f-d493f408230f",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:07:25",
+          "completed_at": "2026-07-08T04:07:25",
+          "items": []
+        },
+        {
+          "id": 56,
+          "order_uid": "e06e0b57-eb8c-444a-b590-336bdd268881",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:07:25",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
         {
           "id": 55,
           "order_uid": "6d534c52-a593-4750-9a54-4a244fb4dad8",
@@ -875,29 +2121,29 @@
         "total_revenue": 745.0,
         "avg_order_value": 186.25,
         "status_counts": {
-          "pending": 8,
-          "confirmed": 6,
+          "pending": 9,
+          "confirmed": 33,
           "completed": 4,
-          "cancelled": 24
+          "cancelled": 47
         },
         "popular_items": [
           {
             "name_en": "Holo Classic Burger",
-            "order_count": 12,
-            "total_quantity": 20
+            "order_count": 36,
+            "total_quantity": 90
           },
           {
             "name_en": "Neon Smash Burger",
-            "order_count": 2,
-            "total_quantity": 2
+            "order_count": 4,
+            "total_quantity": 5
           },
           {
-            "name_en": "Cyber Lava Cake",
+            "name_en": "Neon Loaded Fries",
             "order_count": 1,
             "total_quantity": 1
           },
           {
-            "name_en": "Neon Loaded Fries",
+            "name_en": "Cyber Lava Cake",
             "order_count": 1,
             "total_quantity": 1
           }
@@ -910,16 +2156,16 @@
       "status_code": 200,
       "body": [
         {
+          "event_type": "baseline_test",
+          "count": 26
+        },
+        {
           "event_type": "department_click",
-          "count": 18
+          "count": 26
         },
         {
           "event_type": "add_to_cart",
-          "count": 15
-        },
-        {
-          "event_type": "baseline_test",
-          "count": 3
+          "count": 23
         }
       ]
     },
@@ -1015,6 +2261,404 @@
           "status": "confirmed",
           "total_price": 540.0,
           "started_at": "2026-07-08T07:05:08",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 56,
+          "order_uid": "e06e0b57-eb8c-444a-b590-336bdd268881",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:07:25",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 58,
+          "order_uid": "626337eb-d405-424d-9eb9-55faa8411433",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:15:24",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 60,
+          "order_uid": "caa3d094-f66a-48d6-aa75-cacaa867d028",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:20:23",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 62,
+          "order_uid": "e9acf978-9363-4e58-a053-656d493bde17",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:24:55",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 64,
+          "order_uid": "84deba95-e0a3-4aae-8828-ce36fc96b6db",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:26:53",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 66,
+          "order_uid": "9d78aa0f-8645-4baa-b9e5-d49ea4d5cb32",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:30:18",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 68,
+          "order_uid": "7c77820e-d44a-4772-89d9-7d1fe359eafa",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:33:38",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 70,
+          "order_uid": "2eb67428-9067-41cc-816b-185d4799175c",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:34:56",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 72,
+          "order_uid": "2e0c51d3-ef55-4828-812e-e13e04811179",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:50:14",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 75,
+          "order_uid": "8b7c1d0d-d6b6-44fe-9ccd-9ff9b334b8e1",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T08:06:52",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 77,
+          "order_uid": "d50e4fd8-83be-42d2-84d2-a1ccfb79f538",
+          "status": "confirmed",
+          "total_price": 320.0,
+          "started_at": "2026-07-08T08:13:14",
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 2,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون"
+            }
+          ]
+        },
+        {
+          "id": 78,
+          "order_uid": "6c5fc4f0-a1be-4255-a6c3-ef54f848451d",
+          "status": "confirmed",
+          "total_price": 160.0,
+          "started_at": "2026-07-08T08:18:17",
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 1,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون"
+            }
+          ]
+        },
+        {
+          "id": 79,
+          "order_uid": "836ee5f5-5149-4969-8d0d-4b82dac6a4c0",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:09:25",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 81,
+          "order_uid": "a85558b0-14a5-4301-afe4-5089c2897ab6",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:13:36",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 83,
+          "order_uid": "780379d6-a7f2-453b-8bd2-a073cc014d90",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:14:38",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 85,
+          "order_uid": "acccc138-68f3-48ba-892a-1e4216032d0f",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:15:27",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 87,
+          "order_uid": "dd4a3afc-4a0f-480a-99e4-db793db97897",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:16:07",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 89,
+          "order_uid": "519416df-b952-4e42-bffd-f3dd09027dd3",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:18:32",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 91,
+          "order_uid": "36c1b0dd-3842-4699-b423-c99c5ff0f5ea",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:19:52",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 95,
+          "order_uid": "c515ce7e-a12d-4825-ad55-0a2762658626",
+          "status": "confirmed",
+          "total_price": 180.0,
+          "started_at": "2026-07-08T12:49:23",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 96,
+          "order_uid": "21ee1065-993c-4112-813c-002b0344eed0",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:53:03",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 98,
+          "order_uid": "90692dad-fc2e-4075-b914-a906834c79e7",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:54:28",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 100,
+          "order_uid": "da8fa330-a5b0-4625-a4a7-46229de54093",
+          "status": "confirmed",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T13:00:59",
+          "items": []
+        },
+        {
+          "id": 101,
+          "order_uid": "d19ec5a1-0520-4362-97c2-4a0e0f41af85",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:05:26",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 103,
+          "order_uid": "2947b78b-8e34-421c-8072-c349e1505359",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:17:23",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 105,
+          "order_uid": "9adbf570-633f-47cb-b70b-65eb79900deb",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:26:51",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 106,
+          "order_uid": "c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:27:35",
           "items": [
             {
               "product_id": 1,
@@ -1133,6 +2777,430 @@
               "name_ar": "هولو برجر كلاسيك"
             }
           ]
+        },
+        {
+          "id": 56,
+          "order_uid": "e06e0b57-eb8c-444a-b590-336bdd268881",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:07:25",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 58,
+          "order_uid": "626337eb-d405-424d-9eb9-55faa8411433",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:15:24",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 60,
+          "order_uid": "caa3d094-f66a-48d6-aa75-cacaa867d028",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:20:23",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 62,
+          "order_uid": "e9acf978-9363-4e58-a053-656d493bde17",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:24:55",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 64,
+          "order_uid": "84deba95-e0a3-4aae-8828-ce36fc96b6db",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:26:53",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 66,
+          "order_uid": "9d78aa0f-8645-4baa-b9e5-d49ea4d5cb32",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:30:18",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 68,
+          "order_uid": "7c77820e-d44a-4772-89d9-7d1fe359eafa",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:33:38",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 70,
+          "order_uid": "2eb67428-9067-41cc-816b-185d4799175c",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:34:56",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 72,
+          "order_uid": "2e0c51d3-ef55-4828-812e-e13e04811179",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T07:50:14",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 75,
+          "order_uid": "8b7c1d0d-d6b6-44fe-9ccd-9ff9b334b8e1",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T08:06:52",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 77,
+          "order_uid": "d50e4fd8-83be-42d2-84d2-a1ccfb79f538",
+          "status": "confirmed",
+          "total_price": 320.0,
+          "started_at": "2026-07-08T08:13:14",
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 2,
+              "unit_price": 160.0,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون"
+            }
+          ]
+        },
+        {
+          "id": 78,
+          "order_uid": "6c5fc4f0-a1be-4255-a6c3-ef54f848451d",
+          "status": "confirmed",
+          "total_price": 160.0,
+          "started_at": "2026-07-08T08:18:17",
+          "items": [
+            {
+              "product_id": 2,
+              "quantity": 1,
+              "unit_price": 160.0,
+              "name_en": "Neon Smash Burger",
+              "name_ar": "برجر سماش النيون"
+            }
+          ]
+        },
+        {
+          "id": 79,
+          "order_uid": "836ee5f5-5149-4969-8d0d-4b82dac6a4c0",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:09:25",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 81,
+          "order_uid": "a85558b0-14a5-4301-afe4-5089c2897ab6",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:13:36",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 83,
+          "order_uid": "780379d6-a7f2-453b-8bd2-a073cc014d90",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:14:38",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 85,
+          "order_uid": "acccc138-68f3-48ba-892a-1e4216032d0f",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:15:27",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 87,
+          "order_uid": "dd4a3afc-4a0f-480a-99e4-db793db97897",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:16:07",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 89,
+          "order_uid": "519416df-b952-4e42-bffd-f3dd09027dd3",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:18:32",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 91,
+          "order_uid": "36c1b0dd-3842-4699-b423-c99c5ff0f5ea",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:19:52",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 95,
+          "order_uid": "c515ce7e-a12d-4825-ad55-0a2762658626",
+          "status": "confirmed",
+          "total_price": 180.0,
+          "started_at": "2026-07-08T12:49:23",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 96,
+          "order_uid": "21ee1065-993c-4112-813c-002b0344eed0",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:53:03",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 98,
+          "order_uid": "90692dad-fc2e-4075-b914-a906834c79e7",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T12:54:28",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 100,
+          "order_uid": "da8fa330-a5b0-4625-a4a7-46229de54093",
+          "status": "confirmed",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T13:00:59",
+          "items": []
+        },
+        {
+          "id": 101,
+          "order_uid": "d19ec5a1-0520-4362-97c2-4a0e0f41af85",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:05:26",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 103,
+          "order_uid": "2947b78b-8e34-421c-8072-c349e1505359",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:17:23",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 105,
+          "order_uid": "9adbf570-633f-47cb-b70b-65eb79900deb",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:26:51",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 106,
+          "order_uid": "c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:27:35",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
         }
       ]
     },
@@ -1166,20 +3234,20 @@
       "status_code": 201,
       "body": {
         "status": "created",
-        "id": 13
+        "id": 36
       }
     },
     {
       "method": "PUT",
-      "path": "/api/products/13",
+      "path": "/api/products/36",
       "status_code": 500,
       "body": "Internal Server Error"
     },
     {
       "method": "DELETE",
-      "path": "/api/products/13",
-      "status_code": 500,
-      "body": "Internal Server Error"
+      "path": "/api/products/36",
+      "status_code": -1,
+      "body": "CONNECTION ERROR: [WinError 10054] An existing connection was forcibly closed by the remote host"
     },
     {
       "method": "PUT",
@@ -1203,20 +3271,20 @@
       "status_code": 201,
       "body": {
         "status": "created",
-        "id": 9
+        "id": 32
       }
     },
     {
       "method": "PUT",
-      "path": "/api/departments/9",
+      "path": "/api/departments/32",
       "status_code": 500,
       "body": "Internal Server Error"
     },
     {
       "method": "DELETE",
-      "path": "/api/departments/9",
-      "status_code": 500,
-      "body": "Internal Server Error"
+      "path": "/api/departments/32",
+      "status_code": -1,
+      "body": "CONNECTION ERROR: [WinError 10054] An existing connection was forcibly closed by the remote host"
     },
     {
       "method": "PUT",
@@ -1255,18 +3323,18 @@
     {
       "method": "GET",
       "path_pattern": "/api/health",
-      "status_code": 404,
+      "status_code": 200,
       "body_keys": [
-        "detail"
+        "database",
+        "status",
+        "status_counts"
       ]
     },
     {
       "method": "GET",
       "path_pattern": "/api/metrics",
-      "status_code": 404,
-      "body_keys": [
-        "detail"
-      ]
+      "status_code": 200,
+      "body_type": "str"
     },
     {
       "method": "POST",
@@ -1307,14 +3375,14 @@
       "path_pattern": "/api/departments",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 4
+      "body_length": 5
     },
     {
       "method": "GET",
       "path_pattern": "/api/departments/{id}/products",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 2
+      "body_length": 28
     },
     {
       "method": "GET",
@@ -1392,16 +3460,7 @@
     {
       "method": "POST",
       "path_pattern": "/api/orders",
-      "status_code": 201,
-      "body_keys": [
-        "order_uid",
-        "status"
-      ]
-    },
-    {
-      "method": "POST",
-      "path_pattern": "/api/orders/{uid}/cancel",
-      "status_code": 500,
+      "status_code": -1,
       "body_type": "str"
     },
     {
@@ -1473,7 +3532,7 @@
       "path_pattern": "/api/admin/orders",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 42
+      "body_length": 93
     },
     {
       "method": "GET",
@@ -1499,14 +3558,14 @@
       "path_pattern": "/api/chef/orders",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 6
+      "body_length": 33
     },
     {
       "method": "GET",
       "path_pattern": "/api/cashier/orders",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 6
+      "body_length": 33
     },
     {
       "method": "POST",
@@ -1550,7 +3609,7 @@
     {
       "method": "DELETE",
       "path_pattern": "/api/products/{id}",
-      "status_code": 500,
+      "status_code": -1,
       "body_type": "str"
     },
     {
@@ -1587,7 +3646,7 @@
     {
       "method": "DELETE",
       "path_pattern": "/api/departments/{id}",
-      "status_code": 500,
+      "status_code": -1,
       "body_type": "str"
     },
     {

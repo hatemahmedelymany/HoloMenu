@@ -106,6 +106,40 @@ app.include_router(admin_router)
 app.include_router(analytics_router)
 app.include_router(events_router)
 
+from fastapi import Response
+from prometheus_client import CONTENT_TYPE_LATEST
+
+@app.get("/api/health")
+async def health_check():
+    try:
+        if pool is None:
+            raise Exception("Database pool is not initialized")
+        async with pool.acquire() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cur:
+                await cur.execute("SELECT 1")
+                await cur.execute("SELECT status, COUNT(*) as count FROM orders GROUP BY status")
+                rows = await cur.fetchall()
+                status_counts = {row["status"]: row["count"] for row in rows}
+                return {
+                    "status": "ok",
+                    "database": "connected",
+                    "status_counts": status_counts
+                }
+    except Exception as e:
+        logger.error("health_check_failed", extra={"error": str(e)})
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "database": "disconnected",
+                "detail": str(e)
+            }
+        )
+
+@app.get("/api/metrics")
+async def metrics_endpoint():
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
 from backend.infrastructure.config.settings import CORS_ALLOWED_ORIGINS
 
 app.add_middleware(
@@ -185,7 +219,7 @@ async def tenant_middleware(request: Request, call_next):
 
     # Health check is system-wide, all other api routes require tenant resolution
     is_api_route = path.startswith("/api")
-    if is_api_route and not path.startswith("/api/health"):
+    if is_api_route and not path.startswith("/api/health") and not path.startswith("/api/metrics"):
         try:
             tenant = await get_tenant_by_subdomain(tenant_slug)
             if not tenant:

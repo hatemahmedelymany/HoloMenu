@@ -318,7 +318,7 @@ def save_baseline(results, normalized):
             "raw_results": results,
             "normalized": normalized,
         }, f, indent=2, default=str, ensure_ascii=False)
-    print(f"\n✅ Baseline saved to {BASELINE_FILE}")
+    print(f"\n[OK] Baseline saved to {BASELINE_FILE}")
     print(f"   Total test cases: {len(results)}")
     successes = sum(1 for r in results if 200 <= r["status_code"] < 300)
     errors = sum(1 for r in results if 400 <= r["status_code"] < 500)
@@ -328,7 +328,7 @@ def save_baseline(results, normalized):
 
 def verify_against_baseline(results, normalized):
     if not os.path.exists(BASELINE_FILE):
-        print("❌ No baseline file found! Run without --verify first.")
+        print("[ERR] No baseline file found! Run without --verify first.")
         sys.exit(1)
 
     with open(BASELINE_FILE, "r", encoding="utf-8") as f:
