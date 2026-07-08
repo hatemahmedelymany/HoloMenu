@@ -372,14 +372,13 @@
         </section>
     </main>
 
+    <script src="assets/js/api-client.js"></script>
     <script>
-        const API_BASE = 'http://127.0.0.1:8081/api';
+        const API_BASE = HoloApi.API_BASE;
 
         async function fetchOrders() {
             try {
-                const res = await fetch(`${API_BASE}/chef/orders`);
-                if (!res.ok) throw new Error('Network error');
-                const orders = await res.json();
+                const orders = await HoloApi.getChefOrders();
                 renderQueue(orders);
             } catch (err) {
                 console.error('Failed to load kitchen queue:', err);
@@ -388,14 +387,8 @@
 
         async function updateStatus(orderId, newStatus) {
             try {
-                const res = await fetch(`${API_BASE}/orders/${orderId}/status`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: newStatus })
-                });
-                if (res.ok) {
-                    fetchOrders(); // reload
-                }
+                await HoloApi.updateOrderStatus(orderId, newStatus);
+                fetchOrders(); // reload
             } catch (err) {
                 console.error(`Error updating order status to ${newStatus}:`, err);
             }
