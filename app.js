@@ -2,7 +2,7 @@
    HoloMenu app.js — Phase 2: State Machine, Dwell-Click, DB-backed Catalog
    ========================================================================== */
 
-const API_BASE = 'http://127.0.0.1:8081/api';
+const API_BASE = HoloApi.API_BASE;
 
 // ─── App State Machine ────────────────────────────────────────────────────────
 const STATE = {
@@ -207,8 +207,7 @@ function clearInactivityTimer() {
 async function loadDepartments() {
   deptButtonsEl.innerHTML = '<div class="dept-loading">Loading...</div>';
   try {
-    const res = await fetch(`${API_BASE}/departments`);
-    const depts = await res.json();
+    const depts = await HoloApi.getDepartments();
     renderDeptButtons(depts);
   } catch (e) {
     console.warn('API unavailable, using fallback departments', e);
@@ -220,8 +219,7 @@ async function loadProductsByDept(deptId) {
   carouselEl.innerHTML = '<div class="hologram-viewport"><div class="spinner"></div></div>';
   currentProductIndex = 0;
   try {
-    const res = await fetch(`${API_BASE}/departments/${deptId}/products`);
-    products = await res.json();
+    products = await HoloApi.getProductsByDept(deptId);
   } catch (e) {
     console.warn('API unavailable, using fallback products', e);
     products = FALLBACK_PRODUCTS.filter(p => p.category_id == deptId || true).slice(0, 4);
@@ -232,8 +230,7 @@ async function loadProductsByDept(deptId) {
 
 async function createOrder() {
   try {
-    const res = await fetch(`${API_BASE}/orders`, { method: 'POST' });
-    const data = await res.json();
+    const data = await HoloApi.createOrder();
     currentOrderUid = data.order_uid;
     console.log('Order created:', currentOrderUid);
   } catch (e) {
@@ -245,19 +242,14 @@ async function createOrder() {
 async function apiAddItem(productId, qty = 1) {
   if (!currentOrderUid) return;
   try {
-    await fetch(`${API_BASE}/orders/${currentOrderUid}/items`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product_id: productId, quantity: qty }),
-    });
+    await HoloApi.addOrderItem(currentOrderUid, productId, qty);
   } catch (e) { console.warn('Could not add item to order:', e); }
 }
 
 async function confirmOrder() {
   if (!currentOrderUid) return;
   try {
-    const res = await fetch(`${API_BASE}/orders/${currentOrderUid}/confirm`, { method: 'POST' });
-    const data = await res.json();
+    const data = await HoloApi.confirmOrder(currentOrderUid);
 
     // Render the sequential Order Number
     const orderNumEl = document.getElementById('order-complete-number');
@@ -276,19 +268,13 @@ async function confirmOrder() {
 
 async function apiCancelOrder(uid, reason = 'timeout') {
   try {
-    await fetch(`${API_BASE}/orders/${uid}/cancel?reason=${reason}`, { method: 'POST' });
+    await HoloApi.cancelOrder(uid, reason);
   } catch (e) { /* best effort */ }
 }
 
 async function logAnalyticsEvent(eventType, extra = {}) {
   if (!currentOrderUid) return;
-  try {
-    await fetch(`${API_BASE}/analytics/events`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event_type: eventType, session_uid: currentOrderUid, ...extra }),
-    });
-  } catch (e) { /* best effort */ }
+  await HoloApi.logAnalyticsEvent(currentOrderUid, eventType, extra);
 }
 
 // ─── Department Buttons ───────────────────────────────────────────────────────
@@ -548,12 +534,7 @@ window.adjustCartQty = async function (productId, delta) {
 
   // Sync to database via PUT
   try {
-    const res = await fetch(`${API_BASE}/orders/${currentOrderUid}/items`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ product_id: productId, quantity: newQty })
-    });
-    if (!res.ok) throw new Error('API failure');
+    await HoloApi.updateOrderItem(currentOrderUid, productId, newQty);
   } catch (e) {
     console.warn('Could not sync cart update to DB:', e);
   }
@@ -635,9 +616,7 @@ function updateHandPointer(x, y, ftx, fty, state) {
 
 // ─── WebSocket ───────────────────────────────────────────────────────────────
 function sendWsCmd(cmd) {
-  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
-    wsConnection.send(JSON.stringify({ cmd }));
-  }
+  HoloWs.send({ cmd });
 }
 
 function setConnectionStatus(connected) {
@@ -653,52 +632,24 @@ function setConnectionStatus(connected) {
 }
 
 function connectWebSocket(url) {
-  if (wsConnection) wsConnection.close();
-  setConnectionStatus(false);
-
-  try {
-    wsConnection = new WebSocket(url);
-    wsConnection.onopen = () => setConnectionStatus(true);
-    wsConnection.onclose = () => setConnectionStatus(false);
-    wsConnection.onerror = (e) => console.error('WS error:', e);
-    wsConnection.onmessage = (e) => {
-      try { handleWSEvent(JSON.parse(e.data)); } catch (_) { }
-    };
-  } catch (e) { console.error('WS construction failed:', e); }
+  HoloWs.connect(
+    url,
+    (data) => handleWSEvent(data),
+    (connected) => setConnectionStatus(connected)
+  );
 }
 
 function handleWSEvent(data) {
   // Engine mode changes from backend
   if (data.event === 'engine_mode') {
     console.log(`Engine mode: ${data.mode}`);
-    const hudMode = document.getElementById('hud-mode');
-    if (hudMode) {
-      hudMode.textContent = data.mode.toUpperCase();
-      hudMode.style.color = data.mode === 'active' ? '#48bb78' : '#ecc94b';
-    }
+    HoloHud.updateHealth({ mode: data.mode });
     return;
   }
 
   // Engine health status
   if (data.event === 'health_status') {
-    const setHud = (id, ok, yesText, noText) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      el.textContent = ok ? yesText : noText;
-      el.style.color = ok ? '#48bb78' : '#f56565';
-    };
-    setHud('hud-camera', data.camera_ok, '✅ OK', '❌ FAIL');
-    setHud('hud-mediapipe', data.mediapipe_ok, '✅ OK', '❌ MISSING');
-    setHud('hud-hand', data.hand_detected, '✅ Tracking', '⬜ None');
-    const hudMode = document.getElementById('hud-mode');
-    if (hudMode) {
-      hudMode.textContent = (data.mode || '').toUpperCase();
-      hudMode.style.color = data.mode === 'active' ? '#48bb78' : '#ecc94b';
-    }
-    const hudGesture = document.getElementById('hud-gesture');
-    if (hudGesture && data.last_gesture) {
-      hudGesture.textContent = data.last_gesture;
-    }
+    HoloHud.updateHealth(data);
     // Console warnings for failures
     if (!data.camera_ok) console.warn('[HoloMenu] ⚠️ Camera is NOT open — check device_index in config.json');
     if (!data.mediapipe_ok) console.warn('[HoloMenu] ⚠️ MediaPipe is NOT available — pip install mediapipe');
@@ -717,8 +668,7 @@ function handleWSEvent(data) {
   if (data.event === 'pointer') {
     updateHandPointer(data.x, data.y, data.fingertip_x, data.fingertip_y, data.state);
     // Update hand status in HUD on every pointer frame
-    const hudHand = document.getElementById('hud-hand');
-    if (hudHand) { hudHand.textContent = '✅ Tracking'; hudHand.style.color = '#48bb78'; }
+    HoloHud.updateHandStatus(true);
     return;
   }
 
@@ -728,13 +678,7 @@ function handleWSEvent(data) {
     if (!gesture) return;
 
     // Update gesture name in HUD
-    const hudGesture = document.getElementById('hud-gesture');
-    if (hudGesture) {
-      hudGesture.textContent = gesture;
-      hudGesture.style.color = '#00f0ff';
-      clearTimeout(hudGesture._fadeTimer);
-      hudGesture._fadeTimer = setTimeout(() => { hudGesture.style.color = '#a0aec0'; }, 1500);
-    }
+    HoloHud.updateGesture(gesture);
     console.log(`[HoloMenu] Gesture received: ${gesture} (state: ${currentState})`);
 
     resetInactivityTimer();

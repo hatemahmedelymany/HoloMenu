@@ -359,12 +359,12 @@ def verify_against_baseline(results, normalized):
             )
 
     if diffs:
-        print(f"\n⚠️  DIFFERENCES FOUND ({len(diffs)}):")
+        print(f"\n[!] DIFFERENCES FOUND ({len(diffs)}):")
         for d in diffs:
             print(d)
         sys.exit(1)
     else:
-        print(f"\n✅ Verification passed — {len(normalized)} test cases match baseline.")
+        print(f"\n[PASS] Verification passed — {len(normalized)} test cases match baseline.")
 
 
 def main():
@@ -372,7 +372,7 @@ def main():
     parser.add_argument("--verify", action="store_true", help="Verify against saved baseline")
     args = parser.parse_args()
 
-    print("🔄 Connecting to HoloMenu backend...")
+    print("[RUN] Connecting to HoloMenu backend...")
     client = httpx.Client()
 
     try:
@@ -380,20 +380,20 @@ def main():
         try:
             client.get(f"{BASE}/api/health", headers=HEADERS, timeout=5)
         except Exception as e:
-            print(f"❌ Cannot reach {BASE}/api/health: {e}")
+            print(f"[ERR] Cannot reach {BASE}/api/health: {e}")
             print("   Make sure the server is running: uvicorn backend.main:app --host 127.0.0.1 --port 8081")
             sys.exit(1)
 
-        print("🔑 Logging in as admin...")
+        print("[RUN] Logging in as admin...")
         token = login(client)
         if token:
-            print("   ✓ Login successful")
+            print("   [OK] Login successful")
             # Wait 1.1 seconds to avoid identical JWT refresh token expiration timestamps
             time.sleep(1.1)
         else:
-            print("   ⚠ Login failed — protected endpoint tests will be skipped")
+            print("   [WARN] Login failed — protected endpoint tests will be skipped")
 
-        print("🧪 Running endpoint tests...")
+        print("[RUN] Running endpoint tests...")
         results = run_all(client, token)
         normalized = normalize_for_comparison(results)
 
