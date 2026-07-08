@@ -21,7 +21,7 @@ window.fetch = async function (resource, init) {
 };
 
 const HoloNav = (() => {
-    const API = 'http://127.0.0.1:8081/api';
+    const API = HoloApi.API_BASE;
 
     const PAGES = [
         { id: 'portal', label: 'Portal', icon: '🏠', href: 'portal.html' },
@@ -167,9 +167,7 @@ const HoloNav = (() => {
 
     async function _pollBadges() {
         try {
-            const res = await fetch(`${API}/health`);
-            if (!res.ok) throw new Error('offline');
-            const data = await res.json();
+            const data = await HoloApi.getHealth();
 
             // Update system status
             const dot = document.getElementById('hm-status-dot');
