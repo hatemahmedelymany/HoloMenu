@@ -25,8 +25,8 @@ class MysqlAuditRepo(AuditRepository):
         user_agent: Optional[str] = None,
     ) -> None:
         # Normalize JSON columns
-        before_json = json.dumps(before_state) if before_state is not None else None
-        after_json = json.dumps(after_state) if after_state is not None else None
+        before_json = json.dumps(before_state, default=str) if before_state is not None else None
+        after_json = json.dumps(after_state, default=str) if after_state is not None else None
 
         async with self.conn.cursor() as cur:
             await cur.execute(

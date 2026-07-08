@@ -1,6 +1,6 @@
 {
-  "captured_at": "2026-07-08T13:27:35",
-  "total_endpoints": 44,
+  "captured_at": "2026-07-08T23:53:18",
+  "total_endpoints": 45,
   "raw_results": [
     {
       "method": "GET",
@@ -11,9 +11,11 @@
         "database": "connected",
         "status_counts": {
           "pending": 9,
-          "confirmed": 33,
+          "confirmed": 35,
+          "cooking": 2,
+          "ready": 1,
           "completed": 4,
-          "cancelled": 47
+          "cancelled": 49
         }
       }
     },
@@ -21,14 +23,14 @@
       "method": "GET",
       "path": "/api/metrics",
       "status_code": 200,
-      "body": "# HELP python_gc_objects_collected_total Objects collected during gc\n# TYPE python_gc_objects_collected_total counter\npython_gc_objects_collected_total{generation=\"0\"} 557.0\npython_gc_objects_collected_total{generation=\"1\"} 52.0\npython_gc_objects_collected_total{generation=\"2\"} 6.0\n# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC\n# TYPE python_gc_objects_uncollectable_total counter\npython_gc_objects_uncollectable_total{generation=\"0\"} 0.0\npython_gc_objects_uncol"
+      "body": "# HELP python_gc_objects_collected_total Objects collected during gc\n# TYPE python_gc_objects_collected_total counter\npython_gc_objects_collected_total{generation=\"0\"} 10327.0\npython_gc_objects_collected_total{generation=\"1\"} 4981.0\npython_gc_objects_collected_total{generation=\"2\"} 4.0\n# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC\n# TYPE python_gc_objects_uncollectable_total counter\npython_gc_objects_uncollectable_total{generation=\"0\"} 0.0\npython_gc_objects_u"
     },
     {
       "method": "POST",
       "path": "/api/auth/login",
       "status_code": 200,
       "body": {
-        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidGVuYW50X2lkIjoiZDQ0NDQ0NDQtNDQ0NC00NDQ0LTQ0NDQtNDQ0NDQ0NDQ0NDQ0Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzgzNTA3MzU0LCJ0eXBlIjoiYWNjZXNzIn0.nSRpoviv9FMnssZ8Dhl2ssHpUH_857_dSvKNFwlsCgA",
+        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwidGVuYW50X2lkIjoiZDQ0NDQ0NDQtNDQ0NC00NDQ0LTQ0NDQtNDQ0NDQ0NDQ0NDQ0Iiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzgzNTQ0ODk4LCJ0eXBlIjoiYWNjZXNzIn0.O-_PoD3y-e4nwCqccdlqb2gWgOyEYxEnNANJV1iSo2w",
         "token_type": "bearer",
         "role": "admin"
       }
@@ -137,6 +139,28 @@
           "active": 1,
           "created_at": "2026-07-08T13:26:51",
           "updated_at": "2026-07-08T13:26:51",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 32,
+          "name_en": "Updated Dept",
+          "name_ar": "محدث",
+          "icon_path": null,
+          "display_order": 100,
+          "active": 1,
+          "created_at": "2026-07-08T13:27:35",
+          "updated_at": "2026-07-08T13:27:35",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 33,
+          "name_en": "Updated Dept",
+          "name_ar": "محدث",
+          "icon_path": null,
+          "display_order": 100,
+          "active": 1,
+          "created_at": "2026-07-08T13:28:33",
+          "updated_at": "2026-07-08T13:28:33",
           "tenant_id": "d4444444-4444-4444-4444-444444444444"
         }
       ]
@@ -780,6 +804,94 @@
           "created_at": "2026-07-08T13:26:51",
           "updated_at": "2026-07-08T13:26:51",
           "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 36,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 1,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T13:27:35",
+          "updated_at": "2026-07-08T13:27:35",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 37,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 1,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T13:28:33",
+          "updated_at": "2026-07-08T13:28:33",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 38,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T23:49:28",
+          "updated_at": "2026-07-08T23:49:28",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
+        },
+        {
+          "id": 39,
+          "department_id": 1,
+          "name_en": "Baseline Updated",
+          "name_ar": "محدث",
+          "description_en": null,
+          "description_ar": null,
+          "price": 20.0,
+          "currency": "EGP",
+          "ingredients": null,
+          "calories": 0,
+          "allergens": null,
+          "media_type": "image",
+          "media_path": null,
+          "thumbnail_path": null,
+          "available": 0,
+          "featured": 0,
+          "qr_order_url": null,
+          "created_at": "2026-07-08T23:51:10",
+          "updated_at": "2026-07-08T23:51:10",
+          "tenant_id": "d4444444-4444-4444-4444-444444444444"
         }
       ]
     },
@@ -838,13 +950,13 @@
       "path": "/api/orders",
       "status_code": 201,
       "body": {
-        "order_uid": "c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd",
+        "order_uid": "adc1b58f-8fda-4848-8b27-5ea79b7c4152",
         "status": "pending"
       }
     },
     {
       "method": "POST",
-      "path": "/api/orders/c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd/items",
+      "path": "/api/orders/adc1b58f-8fda-4848-8b27-5ea79b7c4152/items",
       "status_code": 201,
       "body": {
         "status": "item_added"
@@ -852,7 +964,7 @@
     },
     {
       "method": "PUT",
-      "path": "/api/orders/c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd/items",
+      "path": "/api/orders/adc1b58f-8fda-4848-8b27-5ea79b7c4152/items",
       "status_code": 200,
       "body": {
         "status": "item_updated"
@@ -860,15 +972,33 @@
     },
     {
       "method": "POST",
-      "path": "/api/orders/c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd/confirm",
-      "status_code": 500,
-      "body": "Internal Server Error"
+      "path": "/api/orders/adc1b58f-8fda-4848-8b27-5ea79b7c4152/confirm",
+      "status_code": 200,
+      "body": {
+        "status": "confirmed",
+        "order_uid": "adc1b58f-8fda-4848-8b27-5ea79b7c4152",
+        "order_number": 113,
+        "qr_payload": "https://example.com/pickup/adc1b58f-8fda-4848-8b27-5ea79b7c4152",
+        "total_price": 540.0
+      }
     },
     {
       "method": "POST",
       "path": "/api/orders",
-      "status_code": -1,
-      "body": "CONNECTION ERROR: [WinError 10054] An existing connection was forcibly closed by the remote host"
+      "status_code": 201,
+      "body": {
+        "order_uid": "48db0062-6a8c-4ed1-992f-893ffaa2272f",
+        "status": "pending"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/orders/48db0062-6a8c-4ed1-992f-893ffaa2272f/cancel",
+      "status_code": 200,
+      "body": {
+        "status": "cancelled",
+        "reason": "user_cancelled"
+      }
     },
     {
       "method": "POST",
@@ -940,6 +1070,118 @@
       "status_code": 200,
       "body": [
         {
+          "id": 114,
+          "order_uid": "48db0062-6a8c-4ed1-992f-893ffaa2272f",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T23:53:18",
+          "completed_at": "2026-07-08T20:53:18",
+          "items": []
+        },
+        {
+          "id": 113,
+          "order_uid": "adc1b58f-8fda-4848-8b27-5ea79b7c4152",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T23:53:18",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 112,
+          "order_uid": "a9377252-7808-4d9e-bf30-4f272b33d96c",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T23:51:10",
+          "completed_at": "2026-07-08T20:51:10",
+          "items": []
+        },
+        {
+          "id": 111,
+          "order_uid": "400ea1b1-78ae-42ba-bf1f-3dab964bf00a",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T23:51:10",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 110,
+          "order_uid": "42ca9634-aad8-4f23-b006-33b4ed13ba77",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T23:49:28",
+          "completed_at": "2026-07-08T20:49:28",
+          "items": []
+        },
+        {
+          "id": 109,
+          "order_uid": "80dad751-fcf7-4235-bb1b-7a5e976c8653",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T23:49:28",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 108,
+          "order_uid": "8c59ee6f-b6c4-4955-953b-b1481777d2a2",
+          "status": "confirmed",
+          "total_price": 180.0,
+          "started_at": "2026-07-08T23:30:59",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
+          "id": 107,
+          "order_uid": "707476bf-4c1d-4010-ad91-7d0cc8f7088e",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:28:33",
+          "completed_at": null,
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك",
+              "unit_price": 180.0
+            }
+          ]
+        },
+        {
           "id": 106,
           "order_uid": "c442cfb4-87aa-4c2c-b6ca-756f9c8f4fbd",
           "status": "confirmed",
@@ -1000,6 +1242,15 @@
           ]
         },
         {
+          "id": 102,
+          "order_uid": "e0282766-a194-4618-b79c-9d6d20b5dc72",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T13:05:26",
+          "completed_at": "2026-07-08T10:05:26",
+          "items": []
+        },
+        {
           "id": 101,
           "order_uid": "d19ec5a1-0520-4362-97c2-4a0e0f41af85",
           "status": "confirmed",
@@ -1017,30 +1268,12 @@
           ]
         },
         {
-          "id": 102,
-          "order_uid": "e0282766-a194-4618-b79c-9d6d20b5dc72",
-          "status": "cancelled",
-          "total_price": 0.0,
-          "started_at": "2026-07-08T13:05:26",
-          "completed_at": "2026-07-08T10:05:26",
-          "items": []
-        },
-        {
           "id": 100,
           "order_uid": "da8fa330-a5b0-4625-a4a7-46229de54093",
           "status": "confirmed",
           "total_price": 0.0,
           "started_at": "2026-07-08T13:00:59",
           "completed_at": null,
-          "items": []
-        },
-        {
-          "id": 99,
-          "order_uid": "53859f52-57e7-4de5-aa0d-1e0cddba73db",
-          "status": "cancelled",
-          "total_price": 0.0,
-          "started_at": "2026-07-08T12:54:28",
-          "completed_at": "2026-07-08T09:54:28",
           "items": []
         },
         {
@@ -1061,6 +1294,24 @@
           ]
         },
         {
+          "id": 99,
+          "order_uid": "53859f52-57e7-4de5-aa0d-1e0cddba73db",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:54:28",
+          "completed_at": "2026-07-08T09:54:28",
+          "items": []
+        },
+        {
+          "id": 97,
+          "order_uid": "d0e19d50-8140-424b-9406-44304dc15ad1",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:53:03",
+          "completed_at": "2026-07-08T09:53:03",
+          "items": []
+        },
+        {
           "id": 96,
           "order_uid": "21ee1065-993c-4112-813c-002b0344eed0",
           "status": "confirmed",
@@ -1076,15 +1327,6 @@
               "unit_price": 180.0
             }
           ]
-        },
-        {
-          "id": 97,
-          "order_uid": "d0e19d50-8140-424b-9406-44304dc15ad1",
-          "status": "cancelled",
-          "total_price": 0.0,
-          "started_at": "2026-07-08T12:53:03",
-          "completed_at": "2026-07-08T09:53:03",
-          "items": []
         },
         {
           "id": 95,
@@ -1148,15 +1390,6 @@
           ]
         },
         {
-          "id": 90,
-          "order_uid": "9e3251a0-d792-4dcf-9994-d2a47c6a7ed8",
-          "status": "cancelled",
-          "total_price": 0.0,
-          "started_at": "2026-07-08T12:18:32",
-          "completed_at": "2026-07-08T09:18:32",
-          "items": []
-        },
-        {
           "id": 89,
           "order_uid": "519416df-b952-4e42-bffd-f3dd09027dd3",
           "status": "confirmed",
@@ -1172,6 +1405,15 @@
               "unit_price": 180.0
             }
           ]
+        },
+        {
+          "id": 90,
+          "order_uid": "9e3251a0-d792-4dcf-9994-d2a47c6a7ed8",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T12:18:32",
+          "completed_at": "2026-07-08T09:18:32",
+          "items": []
         },
         {
           "id": 88,
@@ -1399,15 +1641,6 @@
           ]
         },
         {
-          "id": 71,
-          "order_uid": "e802d9a6-2eeb-4e6b-87bc-a776aa6f2678",
-          "status": "cancelled",
-          "total_price": 0.0,
-          "started_at": "2026-07-08T07:34:56",
-          "completed_at": "2026-07-08T04:34:56",
-          "items": []
-        },
-        {
           "id": 70,
           "order_uid": "2eb67428-9067-41cc-816b-185d4799175c",
           "status": "confirmed",
@@ -1423,6 +1656,15 @@
               "unit_price": 180.0
             }
           ]
+        },
+        {
+          "id": 71,
+          "order_uid": "e802d9a6-2eeb-4e6b-87bc-a776aa6f2678",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:34:56",
+          "completed_at": "2026-07-08T04:34:56",
+          "items": []
         },
         {
           "id": 69,
@@ -1451,6 +1693,15 @@
           ]
         },
         {
+          "id": 67,
+          "order_uid": "4616adcd-746e-4ef3-a4b2-06c977fb3829",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:30:18",
+          "completed_at": "2026-07-08T04:30:18",
+          "items": []
+        },
+        {
           "id": 66,
           "order_uid": "9d78aa0f-8645-4baa-b9e5-d49ea4d5cb32",
           "status": "confirmed",
@@ -1466,15 +1717,6 @@
               "unit_price": 180.0
             }
           ]
-        },
-        {
-          "id": 67,
-          "order_uid": "4616adcd-746e-4ef3-a4b2-06c977fb3829",
-          "status": "cancelled",
-          "total_price": 0.0,
-          "started_at": "2026-07-08T07:30:18",
-          "completed_at": "2026-07-08T04:30:18",
-          "items": []
         },
         {
           "id": 65,
@@ -1581,15 +1823,6 @@
           ]
         },
         {
-          "id": 57,
-          "order_uid": "c5e4c23d-8379-4700-b00f-d493f408230f",
-          "status": "cancelled",
-          "total_price": 0.0,
-          "started_at": "2026-07-08T07:07:25",
-          "completed_at": "2026-07-08T04:07:25",
-          "items": []
-        },
-        {
           "id": 56,
           "order_uid": "e06e0b57-eb8c-444a-b590-336bdd268881",
           "status": "confirmed",
@@ -1605,6 +1838,15 @@
               "unit_price": 180.0
             }
           ]
+        },
+        {
+          "id": 57,
+          "order_uid": "c5e4c23d-8379-4700-b00f-d493f408230f",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T07:07:25",
+          "completed_at": "2026-07-08T04:07:25",
+          "items": []
         },
         {
           "id": 55,
@@ -1685,18 +1927,9 @@
           ]
         },
         {
-          "id": 49,
-          "order_uid": "cfa27c8e-6573-44b0-ba3f-5d11d3637d97",
-          "status": "cancelled",
-          "total_price": 0.0,
-          "started_at": "2026-07-08T06:51:20",
-          "completed_at": "2026-07-08T03:51:20",
-          "items": []
-        },
-        {
           "id": 48,
           "order_uid": "2c10b17a-8929-4e82-9073-bd7230ba9265",
-          "status": "confirmed",
+          "status": "cooking",
           "total_price": 540.0,
           "started_at": "2026-07-08T06:51:20",
           "completed_at": null,
@@ -1711,9 +1944,18 @@
           ]
         },
         {
+          "id": 49,
+          "order_uid": "cfa27c8e-6573-44b0-ba3f-5d11d3637d97",
+          "status": "cancelled",
+          "total_price": 0.0,
+          "started_at": "2026-07-08T06:51:20",
+          "completed_at": "2026-07-08T03:51:20",
+          "items": []
+        },
+        {
           "id": 47,
           "order_uid": "96f42d96-f694-40be-a3fb-bfaaf033a8a9",
-          "status": "confirmed",
+          "status": "cooking",
           "total_price": 160.0,
           "started_at": "2026-07-07T07:05:14",
           "completed_at": null,
@@ -1730,7 +1972,7 @@
         {
           "id": 46,
           "order_uid": "0b934750-f1b7-408f-85f7-d32e5cbf7554",
-          "status": "confirmed",
+          "status": "ready",
           "total_price": 340.0,
           "started_at": "2026-07-07T06:53:59",
           "completed_at": null,
@@ -2122,15 +2364,17 @@
         "avg_order_value": 186.25,
         "status_counts": {
           "pending": 9,
-          "confirmed": 33,
+          "confirmed": 35,
+          "cooking": 2,
+          "ready": 1,
           "completed": 4,
-          "cancelled": 47
+          "cancelled": 50
         },
         "popular_items": [
           {
             "name_en": "Holo Classic Burger",
-            "order_count": 36,
-            "total_quantity": 90
+            "order_count": 41,
+            "total_quantity": 103
           },
           {
             "name_en": "Neon Smash Burger",
@@ -2138,12 +2382,12 @@
             "total_quantity": 5
           },
           {
-            "name_en": "Neon Loaded Fries",
+            "name_en": "Cyber Lava Cake",
             "order_count": 1,
             "total_quantity": 1
           },
           {
-            "name_en": "Cyber Lava Cake",
+            "name_en": "Neon Loaded Fries",
             "order_count": 1,
             "total_quantity": 1
           }
@@ -2157,15 +2401,15 @@
       "body": [
         {
           "event_type": "baseline_test",
-          "count": 26
+          "count": 30
         },
         {
           "event_type": "department_click",
-          "count": 26
+          "count": 27
         },
         {
           "event_type": "add_to_cart",
-          "count": 23
+          "count": 24
         }
       ]
     },
@@ -2177,7 +2421,7 @@
         {
           "id": 46,
           "order_uid": "0b934750-f1b7-408f-85f7-d32e5cbf7554",
-          "status": "confirmed",
+          "status": "ready",
           "total_price": 340.0,
           "started_at": "2026-07-07T06:53:59",
           "items": [
@@ -2198,7 +2442,7 @@
         {
           "id": 47,
           "order_uid": "96f42d96-f694-40be-a3fb-bfaaf033a8a9",
-          "status": "confirmed",
+          "status": "cooking",
           "total_price": 160.0,
           "started_at": "2026-07-07T07:05:14",
           "items": [
@@ -2213,7 +2457,7 @@
         {
           "id": 48,
           "order_uid": "2c10b17a-8929-4e82-9073-bd7230ba9265",
-          "status": "confirmed",
+          "status": "cooking",
           "total_price": 540.0,
           "started_at": "2026-07-08T06:51:20",
           "items": [
@@ -2659,6 +2903,81 @@
           "status": "confirmed",
           "total_price": 540.0,
           "started_at": "2026-07-08T13:27:35",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 107,
+          "order_uid": "707476bf-4c1d-4010-ad91-7d0cc8f7088e",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:28:33",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 108,
+          "order_uid": "8c59ee6f-b6c4-4955-953b-b1481777d2a2",
+          "status": "confirmed",
+          "total_price": 180.0,
+          "started_at": "2026-07-08T23:30:59",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 109,
+          "order_uid": "80dad751-fcf7-4235-bb1b-7a5e976c8653",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T23:49:28",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 111,
+          "order_uid": "400ea1b1-78ae-42ba-bf1f-3dab964bf00a",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T23:51:10",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 113,
+          "order_uid": "adc1b58f-8fda-4848-8b27-5ea79b7c4152",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T23:53:18",
           "items": [
             {
               "product_id": 1,
@@ -2678,7 +2997,7 @@
         {
           "id": 46,
           "order_uid": "0b934750-f1b7-408f-85f7-d32e5cbf7554",
-          "status": "confirmed",
+          "status": "ready",
           "total_price": 340.0,
           "started_at": "2026-07-07T06:53:59",
           "items": [
@@ -2701,7 +3020,7 @@
         {
           "id": 47,
           "order_uid": "96f42d96-f694-40be-a3fb-bfaaf033a8a9",
-          "status": "confirmed",
+          "status": "cooking",
           "total_price": 160.0,
           "started_at": "2026-07-07T07:05:14",
           "items": [
@@ -2717,7 +3036,7 @@
         {
           "id": 48,
           "order_uid": "2c10b17a-8929-4e82-9073-bd7230ba9265",
-          "status": "confirmed",
+          "status": "cooking",
           "total_price": 540.0,
           "started_at": "2026-07-08T06:51:20",
           "items": [
@@ -3192,6 +3511,86 @@
           "status": "confirmed",
           "total_price": 540.0,
           "started_at": "2026-07-08T13:27:35",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 107,
+          "order_uid": "707476bf-4c1d-4010-ad91-7d0cc8f7088e",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T13:28:33",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 108,
+          "order_uid": "8c59ee6f-b6c4-4955-953b-b1481777d2a2",
+          "status": "confirmed",
+          "total_price": 180.0,
+          "started_at": "2026-07-08T23:30:59",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 1,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 109,
+          "order_uid": "80dad751-fcf7-4235-bb1b-7a5e976c8653",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T23:49:28",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 111,
+          "order_uid": "400ea1b1-78ae-42ba-bf1f-3dab964bf00a",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T23:51:10",
+          "items": [
+            {
+              "product_id": 1,
+              "quantity": 3,
+              "unit_price": 180.0,
+              "name_en": "Holo Classic Burger",
+              "name_ar": "هولو برجر كلاسيك"
+            }
+          ]
+        },
+        {
+          "id": 113,
+          "order_uid": "adc1b58f-8fda-4848-8b27-5ea79b7c4152",
+          "status": "confirmed",
+          "total_price": 540.0,
+          "started_at": "2026-07-08T23:53:18",
           "items": [
             {
               "product_id": 1,
@@ -3234,20 +3633,26 @@
       "status_code": 201,
       "body": {
         "status": "created",
-        "id": 36
+        "id": 40
       }
     },
     {
       "method": "PUT",
-      "path": "/api/products/36",
-      "status_code": 500,
-      "body": "Internal Server Error"
+      "path": "/api/products/40",
+      "status_code": 200,
+      "body": {
+        "status": "updated",
+        "id": 40
+      }
     },
     {
       "method": "DELETE",
-      "path": "/api/products/36",
-      "status_code": -1,
-      "body": "CONNECTION ERROR: [WinError 10054] An existing connection was forcibly closed by the remote host"
+      "path": "/api/products/40",
+      "status_code": 200,
+      "body": {
+        "status": "deleted_soft",
+        "id": 40
+      }
     },
     {
       "method": "PUT",
@@ -3271,20 +3676,26 @@
       "status_code": 201,
       "body": {
         "status": "created",
-        "id": 32
+        "id": 36
       }
     },
     {
       "method": "PUT",
-      "path": "/api/departments/32",
-      "status_code": 500,
-      "body": "Internal Server Error"
+      "path": "/api/departments/36",
+      "status_code": 200,
+      "body": {
+        "status": "updated",
+        "id": 36
+      }
     },
     {
       "method": "DELETE",
-      "path": "/api/departments/32",
-      "status_code": -1,
-      "body": "CONNECTION ERROR: [WinError 10054] An existing connection was forcibly closed by the remote host"
+      "path": "/api/departments/36",
+      "status_code": 200,
+      "body": {
+        "status": "deleted_soft",
+        "id": 36
+      }
     },
     {
       "method": "PUT",
@@ -3375,14 +3786,14 @@
       "path_pattern": "/api/departments",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 5
+      "body_length": 7
     },
     {
       "method": "GET",
       "path_pattern": "/api/departments/{id}/products",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 28
+      "body_length": 32
     },
     {
       "method": "GET",
@@ -3454,14 +3865,32 @@
     {
       "method": "POST",
       "path_pattern": "/api/orders/{uid}/confirm",
-      "status_code": 500,
-      "body_type": "str"
+      "status_code": 200,
+      "body_keys": [
+        "order_number",
+        "order_uid",
+        "qr_payload",
+        "status",
+        "total_price"
+      ]
     },
     {
       "method": "POST",
       "path_pattern": "/api/orders",
-      "status_code": -1,
-      "body_type": "str"
+      "status_code": 201,
+      "body_keys": [
+        "order_uid",
+        "status"
+      ]
+    },
+    {
+      "method": "POST",
+      "path_pattern": "/api/orders/{uid}/cancel",
+      "status_code": 200,
+      "body_keys": [
+        "reason",
+        "status"
+      ]
     },
     {
       "method": "POST",
@@ -3532,7 +3961,7 @@
       "path_pattern": "/api/admin/orders",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 93
+      "body_length": 101
     },
     {
       "method": "GET",
@@ -3558,14 +3987,14 @@
       "path_pattern": "/api/chef/orders",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 33
+      "body_length": 38
     },
     {
       "method": "GET",
       "path_pattern": "/api/cashier/orders",
       "status_code": 200,
       "body_type": "list",
-      "body_length": 33
+      "body_length": 38
     },
     {
       "method": "POST",
@@ -3603,14 +4032,20 @@
     {
       "method": "PUT",
       "path_pattern": "/api/products/{id}",
-      "status_code": 500,
-      "body_type": "str"
+      "status_code": 200,
+      "body_keys": [
+        "id",
+        "status"
+      ]
     },
     {
       "method": "DELETE",
       "path_pattern": "/api/products/{id}",
-      "status_code": -1,
-      "body_type": "str"
+      "status_code": 200,
+      "body_keys": [
+        "id",
+        "status"
+      ]
     },
     {
       "method": "PUT",
@@ -3640,14 +4075,20 @@
     {
       "method": "PUT",
       "path_pattern": "/api/departments/{id}",
-      "status_code": 500,
-      "body_type": "str"
+      "status_code": 200,
+      "body_keys": [
+        "id",
+        "status"
+      ]
     },
     {
       "method": "DELETE",
       "path_pattern": "/api/departments/{id}",
-      "status_code": -1,
-      "body_type": "str"
+      "status_code": 200,
+      "body_keys": [
+        "id",
+        "status"
+      ]
     },
     {
       "method": "PUT",

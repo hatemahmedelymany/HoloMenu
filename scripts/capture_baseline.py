@@ -350,12 +350,12 @@ def verify_against_baseline(results, normalized):
         if b["status_code"] != n["status_code"]:
             diffs.append(
                 f"  [{i}] {n.get('method','')} {n.get('path_pattern','')}: "
-                f"status {b['status_code']} → {n['status_code']}"
+                f"status {b['status_code']} -> {n['status_code']}"
             )
         if b.get("body_keys") != n.get("body_keys"):
             diffs.append(
                 f"  [{i}] {n.get('method','')} {n.get('path_pattern','')}: "
-                f"body keys changed {b.get('body_keys')} → {n.get('body_keys')}"
+                f"body keys changed {b.get('body_keys')} -> {n.get('body_keys')}"
             )
 
     if diffs:
