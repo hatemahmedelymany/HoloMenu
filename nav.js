@@ -11,11 +11,11 @@ window.fetch = async function (resource, init) {
 
     const response = await originalFetch(resource, init);
 
-    // If 401 Unauthorized, display login modal (except when trying to log in itself)
+    // If 401 Unauthorized, redirect to login page (except when trying to log in itself)
     if (response.status === 401 && !resource.toString().includes('/auth/login')) {
         localStorage.removeItem('access_token');
         localStorage.removeItem('user_role');
-        HoloNav.showLoginModal();
+        window.location.href = '/login.html';
     }
     return response;
 };
@@ -32,7 +32,6 @@ const HoloNav = (() => {
     ];
 
     let _currentPage = '';
-    let _statusPollTimer = null;
 
     function init(currentPage) {
         _currentPage = currentPage;
@@ -40,7 +39,7 @@ const HoloNav = (() => {
 
         // Force authentication on staff/admin pages
         if (_currentPage !== 'kiosk' && !localStorage.getItem('access_token')) {
-            showLoginModal();
+            window.location.href = '/login.html';
             return;
         }
 
@@ -101,68 +100,9 @@ const HoloNav = (() => {
                 } catch (_) { }
                 localStorage.removeItem('access_token');
                 localStorage.removeItem('user_role');
-                window.location.reload();
+                window.location.href = '/login.html';
             });
         }
-    }
-
-    function showLoginModal() {
-        if (document.getElementById('hm-login-overlay')) {
-            document.getElementById('hm-login-overlay').classList.add('visible');
-            return;
-        }
-
-        const overlay = document.createElement('div');
-        overlay.id = 'hm-login-overlay';
-        overlay.className = 'hm-login-overlay visible';
-        overlay.innerHTML = `
-            <div class="hm-login-card">
-                <div class="hm-login-logo">HoloMenu <span>Portal</span></div>
-                <div class="hm-login-subtitle">System Authentication Required</div>
-                <form id="hm-login-form">
-                    <div class="hm-login-form-group">
-                        <label class="hm-login-label">Username</label>
-                        <input type="text" id="hm-login-username" class="hm-login-input" placeholder="Enter username" required autocomplete="username">
-                    </div>
-                    <div class="hm-login-form-group">
-                        <label class="hm-login-label">Password</label>
-                        <input type="password" id="hm-login-password" class="hm-login-input" placeholder="Enter password" required autocomplete="current-password">
-                    </div>
-                    <button type="submit" class="hm-login-btn">Log In</button>
-                    <div id="hm-login-error" class="hm-login-error"></div>
-                </form>
-            </div>
-        `;
-        document.body.appendChild(overlay);
-
-        document.getElementById('hm-login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('hm-login-username').value;
-            const password = document.getElementById('hm-login-password').value;
-            const errorDiv = document.getElementById('hm-login-error');
-            errorDiv.style.display = 'none';
-
-            try {
-                const res = await originalFetch(`${API}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-
-                if (!res.ok) {
-                    throw new Error('Invalid username or password');
-                }
-
-                const data = await res.json();
-                localStorage.setItem('access_token', data.access_token);
-                localStorage.setItem('user_role', data.role);
-                overlay.classList.remove('visible');
-                window.location.reload();
-            } catch (err) {
-                errorDiv.textContent = err.message || 'Login failed. Please try again.';
-                errorDiv.style.display = 'block';
-            }
-        });
     }
 
     async function _pollBadges() {
@@ -198,5 +138,5 @@ const HoloNav = (() => {
         el.classList.toggle('visible', count > 0);
     }
 
-    return { init, showLoginModal };
+    return { init };
 })();
