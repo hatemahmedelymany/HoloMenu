@@ -1,200 +1,156 @@
-const HoloApi = (() => {
-    const API_BASE = 'http://127.0.0.1:8081/api';
+const HoloApi = {
+    API_BASE: 'http://127.0.0.1:8081/api',
 
-    async function getDepartments() {
-        const res = await fetch(`${API_BASE}/departments`);
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    _getToken() {
+        return localStorage.getItem('access_token');
+    },
 
-    async function getProductsByDept(deptId) {
-        const res = await fetch(`${API_BASE}/departments/${deptId}/products`);
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    async _handleResponse(response) {
+        if (response.status === 401 || response.status === 403) {
+            // Unified behavior: redirect to login
+            window.location.href = '/login.html';
+            return null;
+        }
+        if (!response.ok) {
+            const body = await response.text();
+            throw new Error(`HoloApi error ${response.status}: ${body}`);
+        }
+        return response.json();
+    },
 
-    async function createOrder() {
-        const res = await fetch(`${API_BASE}/orders`, { method: 'POST' });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    async _request(path, options = {}) {
+        const token = this._getToken();
+        const headers = {
+            'Content-Type': 'application/json',
+            ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+            ...(options.headers || {}),
+        };
+        const response = await fetch(`${this.API_BASE}${path}`, { ...options, headers });
+        return this._handleResponse(response);
+    },
 
-    async function addOrderItem(orderUid, productId, qty) {
-        const res = await fetch(`${API_BASE}/orders/${orderUid}/items`, {
+    async getDepartments() {
+        return this._request('/departments');
+    },
+
+    async getProductsByDept(deptId) {
+        return this._request(`/departments/${deptId}/products`);
+    },
+
+    async createOrder() {
+        return this._request('/orders', { method: 'POST' });
+    },
+
+    async addOrderItem(orderUid, productId, qty) {
+        return this._request(`/orders/${orderUid}/items`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ product_id: productId, quantity: qty }),
         });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    },
 
-    async function updateOrderItem(orderUid, productId, qty) {
-        const res = await fetch(`${API_BASE}/orders/${orderUid}/items`, {
+    async updateOrderItem(orderUid, productId, qty) {
+        return this._request(`/orders/${orderUid}/items`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ product_id: productId, quantity: qty }),
         });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    },
 
-    async function confirmOrder(orderUid) {
-        const res = await fetch(`${API_BASE}/orders/${orderUid}/confirm`, { method: 'POST' });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    async confirmOrder(orderUid) {
+        return this._request(`/orders/${orderUid}/confirm`, { method: 'POST' });
+    },
 
-    async function cancelOrder(orderUid, reason = 'timeout') {
-        const res = await fetch(`${API_BASE}/orders/${orderUid}/cancel?reason=${reason}`, { method: 'POST' });
-        return res.ok;
-    }
+    async cancelOrder(orderUid, reason = 'timeout') {
+        return this._request(`/orders/${orderUid}/cancel?reason=${reason}`, { method: 'POST' });
+    },
 
-    async function logAnalyticsEvent(orderUid, eventType, extra = {}) {
+    async logAnalyticsEvent(orderUid, eventType, extra = {}) {
         try {
-            await fetch(`${API_BASE}/analytics/events`, {
+            await fetch(`${this.API_BASE}/analytics/events`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this._getToken()}`
+                },
                 body: JSON.stringify({ event_type: eventType, session_uid: orderUid, ...extra }),
             });
         } catch (e) { /* best effort */ }
-    }
+    },
 
-    async function getHealth() {
-        const res = await fetch(`${API_BASE}/health`);
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    async getHealth() {
+        return this._request('/health');
+    },
 
-    async function getChefOrders() {
-        const res = await fetch(`${API_BASE}/chef/orders`);
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    async getChefOrders() {
+        return this._request('/chef/orders');
+    },
 
-    async function updateOrderStatus(orderId, status) {
-        const res = await fetch(`${API_BASE}/orders/${orderId}/status`, {
+    async updateOrderStatus(orderId, status) {
+        return this._request(`/orders/${orderId}/status`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ status })
         });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    },
 
-    async function getCashierOrders() {
-        const res = await fetch(`${API_BASE}/cashier/orders`);
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    async getCashierOrders() {
+        return this._request('/cashier/orders');
+    },
 
-    async function payOrder(orderId, payload) {
-        const res = await fetch(`${API_BASE}/orders/${orderId}/pay`, {
+    async payOrder(orderId, payload) {
+        return this._request(`/orders/${orderId}/pay`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    },
 
-    async function getAdminOrders() {
-        const res = await fetch(`${API_BASE}/admin/orders`);
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    async getAdminOrders() {
+        return this._request('/admin/orders');
+    },
 
-    async function getAdminStats() {
-        const res = await fetch(`${API_BASE}/admin/stats`);
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    async getAdminStats() {
+        return this._request('/admin/stats');
+    },
 
-    async function getAnalyticsSummary() {
-        const res = await fetch(`${API_BASE}/analytics/summary`);
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    async getAnalyticsSummary() {
+        return this._request('/analytics/summary');
+    },
 
-    async function createProduct(payload) {
-        const res = await fetch(`${API_BASE}/products`, {
+    async createProduct(payload) {
+        return this._request('/products', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    },
 
-    async function updateProduct(productId, payload) {
-        const res = await fetch(`${API_BASE}/products/${productId}`, {
+    async updateProduct(productId, payload) {
+        return this._request(`/products/${productId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    },
 
-    async function deleteProduct(productId) {
-        const res = await fetch(`${API_BASE}/products/${productId}`, {
+    async deleteProduct(productId) {
+        return this._request(`/products/${productId}`, {
             method: 'DELETE'
         });
-        if (!res.ok) throw new Error('API error');
-        return res.ok;
-    }
+    },
 
-    async function createDepartment(payload) {
-        const res = await fetch(`${API_BASE}/departments`, {
+    async createDepartment(payload) {
+        return this._request('/departments', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    },
 
-    async function updateDepartment(deptId, payload) {
-        const res = await fetch(`${API_BASE}/departments/${deptId}`, {
+    async updateDepartment(deptId, payload) {
+        return this._request(`/departments/${deptId}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('API error');
-        return res.json();
-    }
+    },
 
-    async function deleteDepartment(deptId) {
-        const res = await fetch(`${API_BASE}/departments/${deptId}`, {
+    async deleteDepartment(deptId) {
+        return this._request(`/departments/${deptId}`, {
             method: 'DELETE'
         });
-        if (!res.ok) throw new Error('API error');
-        return res.ok;
     }
-
-    return {
-        API_BASE,
-        getDepartments,
-        getProductsByDept,
-        createOrder,
-        addOrderItem,
-        updateOrderItem,
-        confirmOrder,
-        cancelOrder,
-        logAnalyticsEvent,
-        getHealth,
-        getChefOrders,
-        updateOrderStatus,
-        getCashierOrders,
-        payOrder,
-        getAdminOrders,
-        getAdminStats,
-        getAnalyticsSummary,
-        createProduct,
-        updateProduct,
-        deleteProduct,
-        createDepartment,
-        updateDepartment,
-        deleteDepartment
-    };
-})();
+};

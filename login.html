@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoloMenu — System Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="nav.css">
+    <style>
+        :root {
+            --bg: #07090e;
+            --blue: #00f0ff;
+            --purple: #b388ff;
+            --gold: #ffd740;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated grid background */
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glowing orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            animation: orb-drift 12s ease-in-out infinite alternate;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--blue);
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--purple);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: 4s;
+        }
+
+        @keyframes orb-drift {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(20px, 20px);
+            }
+        }
+
+        .login-wrap {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        .hm-login-card {
+            background: rgba(14, 20, 32, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(0, 240, 255, 0.05);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="login-wrap">
+        <div class="hm-login-card">
+            <div class="hm-login-logo">HoloMenu <span>Portal</span></div>
+            <div class="hm-login-subtitle">System Authentication Required</div>
+            <form id="hm-login-form">
+                <div class="hm-login-form-group">
+                    <label class="hm-login-label">Username</label>
+                    <input type="text" id="hm-login-username" class="hm-login-input" placeholder="Enter username" required autocomplete="username">
+                </div>
+                <div class="hm-login-form-group">
+                    <label class="hm-login-label">Password</label>
+                    <input type="password" id="hm-login-password" class="hm-login-input" placeholder="Enter password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="hm-login-btn">Log In</button>
+                <div id="hm-login-error" class="hm-login-error"></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/api-client.js"></script>
+    <script>
+        document.getElementById('hm-login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('hm-login-username').value;
+            const password = document.getElementById('hm-login-password').value;
+            const errorDiv = document.getElementById('hm-login-error');
+            errorDiv.style.display = 'none';
+
+            try {
+                // Use standard window fetch or HoloApi request helper to perform the login
+                const res = await fetch(`${HoloApi.API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (!res.ok) {
+                    throw new Error('Invalid username or password');
+                }
+
+                const data = await res.json();
+                localStorage.setItem('access_token', data.access_token);
+                localStorage.setItem('user_role', data.role);
+                
+                // Redirect back to system portal
+                window.location.href = '/portal.html';
+            } catch (err) {
+                errorDiv.textContent = err.message || 'Login failed. Please try again.';
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>
