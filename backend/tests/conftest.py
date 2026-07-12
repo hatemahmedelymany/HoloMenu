@@ -45,14 +45,16 @@ def mock_tenant_resolver():
                 "id": "b4444444-4444-4444-4444-444444444444",
                 "subdomain": "tenantb",
                 "status": "active",
-                "grace_period_ends_at": None
+                "grace_period_ends_at": None,
+                "deleted_at": None
             }
         if subdomain == "demo":
             return {
                 "id": "d4444444-4444-4444-4444-444444444444",
                 "subdomain": "demo",
                 "status": "active",
-                "grace_period_ends_at": None
+                "grace_period_ends_at": None,
+                "deleted_at": None
             }
         return None
         

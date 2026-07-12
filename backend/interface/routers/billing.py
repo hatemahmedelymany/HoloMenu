@@ -120,7 +120,7 @@ async def handle_stripe_webhook(
 
         # Fetch current tenant state to prevent overwriting active subscriptions with stale webhooks
         async with conn.cursor(aiomysql.DictCursor) as cur:
-            await cur.execute("SELECT plan, status, grace_period_ends_at FROM tenants WHERE id = %s", (tenant_id,))
+            await cur.execute("SELECT plan, status, grace_period_ends_at, deleted_at FROM tenants WHERE id = %s", (tenant_id,))
             tenant = await cur.fetchone()
             if not tenant:
                 logger.warning(f"Tenant {tenant_id} not found for event {event_type}")
@@ -130,6 +130,7 @@ async def handle_stripe_webhook(
         plan = metadata.get("plan", tenant["plan"]) # e.g. "starter", "pro", "enterprise"
         status_val = tenant["status"]
         grace_period_ends_at = tenant["grace_period_ends_at"]
+        deleted_at_val = tenant["deleted_at"]
         max_kiosks = PLAN_LIMITS.get(plan, 1)
 
         now = datetime.utcnow()
@@ -137,12 +138,14 @@ async def handle_stripe_webhook(
         if event_type == "customer.subscription.created":
             status_val = "active"
             grace_period_ends_at = None
+            deleted_at_val = None
 
         elif event_type == "customer.subscription.updated":
             sub_status = event_obj.get("status") # active, trialing, past_due, canceled, unpaid
             if sub_status in ("active", "trialing"):
                 status_val = "active"
                 grace_period_ends_at = None
+                deleted_at_val = None
             elif sub_status == "past_due":
                 status_val = "active"
                 # If grace period not already set, set it to 7 days from now
@@ -151,10 +154,12 @@ async def handle_stripe_webhook(
             elif sub_status in ("canceled", "unpaid"):
                 status_val = "suspended"
                 grace_period_ends_at = None
+                deleted_at_val = now
 
         elif event_type == "customer.subscription.deleted":
             status_val = "suspended"
             grace_period_ends_at = None
+            deleted_at_val = now
 
         elif event_type == "invoice.payment_failed":
             status_val = "active"
@@ -164,16 +169,17 @@ async def handle_stripe_webhook(
         elif event_type == "invoice.payment_succeeded":
             status_val = "active"
             grace_period_ends_at = None
+            deleted_at_val = None
 
         # Apply update to Database
         async with conn.cursor() as cur:
             await cur.execute(
                 """
                 UPDATE tenants 
-                SET plan = %s, status = %s, max_kiosks = %s, grace_period_ends_at = %s 
+                SET plan = %s, status = %s, max_kiosks = %s, grace_period_ends_at = %s, deleted_at = %s 
                 WHERE id = %s
                 """,
-                (plan, status_val, max_kiosks, grace_period_ends_at, tenant_id)
+                (plan, status_val, max_kiosks, grace_period_ends_at, deleted_at_val, tenant_id)
             )
 
         logger.info(f"Processed event {event_type} for tenant {tenant_id}: plan={plan}, status={status_val}")
