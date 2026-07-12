@@ -1,0 +1,18 @@
+[package]
+name = "holomenu-kiosk"
+version = "1.0.0"
+description = "HoloMenu Customer Kiosk Desktop Application Container"
+authors = ["HoloMenu Team"]
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "1.5" }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.5", features = ["api-all"] }
+
+[features]
+default = [ "custom-protocol" ]
+custom-protocol = [ "tauri/custom-protocol" ]

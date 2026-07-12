@@ -51,9 +51,11 @@ from backend.interface.routers.auth import router as auth_router
 from backend.interface.routers.admin import router as admin_router
 from backend.interface.routers.analytics import router as analytics_router
 from backend.interface.routers.events import router as events_router
+from backend.interface.routers.pairing import router as pairing_router
 
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
+
 
 from backend.infrastructure.config.settings import DB_CONFIG
 
@@ -105,6 +107,8 @@ app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(analytics_router)
 app.include_router(events_router)
+app.include_router(pairing_router)
+
 
 from fastapi import Response
 from prometheus_client import CONTENT_TYPE_LATEST

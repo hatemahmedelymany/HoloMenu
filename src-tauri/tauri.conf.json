@@ -1,0 +1,35 @@
+{
+  "build": {
+    "beforeDevCommand": "",
+    "beforeBuildCommand": "",
+    "devPath": "http://localhost:8000",
+    "distDir": "../dist"
+  },
+  "package": {
+    "productName": "HoloMenuKiosk",
+    "version": "1.0.0"
+  },
+  "tauri": {
+    "allowlist": {
+      "all": true
+    },
+    "bundle": {
+      "active": true,
+      "targets": "all",
+      "identifier": "com.holomenu.kiosk",
+      "icon": []
+    },
+    "security": {
+      "csp": null
+    },
+    "windows": [
+      {
+        "fullscreen": true,
+        "resizable": true,
+        "title": "HoloMenu Customer Kiosk",
+        "width": 1920,
+        "height": 1080
+      }
+    ]
+  }
+}
