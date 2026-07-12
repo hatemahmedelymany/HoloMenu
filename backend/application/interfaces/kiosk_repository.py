@@ -9,7 +9,7 @@ class KioskRepository(ABC):
 
     @abstractmethod
     async def create_kiosk(
-        self, kiosk_id: str, tenant_id: str, name: str, secret: str, status: str = "active"
+        self, kiosk_id: str, tenant_id: str, name: str, secret: str, device_id: str, status: str = "active"
     ) -> None:
         """Create a new kiosk record."""
         pass
@@ -21,7 +21,7 @@ class KioskRepository(ABC):
 
     @abstractmethod
     async def create_websocket_session(
-        self, token: str, tenant_id: str, kiosk_id: str, expires_at
+        self, token: str, tenant_id: str, kiosk_id: str, device_id: str, expires_at
     ) -> None:
         """Save a new WebSocket session token record."""
         pass

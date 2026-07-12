@@ -16,13 +16,13 @@ class MysqlKioskRepo(KioskRepository):
             return row[0] if row else 0
 
     async def create_kiosk(
-        self, kiosk_id: str, tenant_id: str, name: str, secret: str, status: str = "active"
+        self, kiosk_id: str, tenant_id: str, name: str, secret: str, device_id: str, status: str = "active"
     ) -> None:
         async with self.conn.cursor() as cur:
             await cur.execute(
-                """INSERT INTO kiosks (id, tenant_id, name, secret, status)
-                   VALUES (%s, %s, %s, %s, %s)""",
-                (kiosk_id, tenant_id, name, secret, status)
+                """INSERT INTO kiosks (id, tenant_id, name, secret, device_id, status)
+                   VALUES (%s, %s, %s, %s, %s, %s)""",
+                (kiosk_id, tenant_id, name, secret, device_id, status)
             )
 
     async def get_kiosk(self, tenant_id: str, kiosk_id: str) -> Optional[dict]:
@@ -34,13 +34,13 @@ class MysqlKioskRepo(KioskRepository):
             return await cur.fetchone()
 
     async def create_websocket_session(
-        self, token: str, tenant_id: str, kiosk_id: str, expires_at
+        self, token: str, tenant_id: str, kiosk_id: str, device_id: str, expires_at
     ) -> None:
         async with self.conn.cursor() as cur:
             await cur.execute(
-                """INSERT INTO websocket_sessions (token, tenant_id, kiosk_id, expires_at)
-                   VALUES (%s, %s, %s, %s)""",
-                (token, tenant_id, kiosk_id, expires_at)
+                """INSERT INTO websocket_sessions (token, tenant_id, kiosk_id, device_id, expires_at)
+                   VALUES (%s, %s, %s, %s, %s)""",
+                (token, tenant_id, kiosk_id, device_id, expires_at)
             )
 
     async def verify_websocket_session(self, tenant_id: str, token: str) -> bool:

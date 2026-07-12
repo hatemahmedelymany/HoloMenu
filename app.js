@@ -615,8 +615,34 @@ function updateHandPointer(x, y, ftx, fty, state) {
 }
 
 // ─── WebSocket ───────────────────────────────────────────────────────────────
+let wsSeq = 0;
+
+function getDeviceId() {
+  let deviceId = localStorage.getItem('holo_device_id');
+  if (!deviceId) {
+    deviceId = 'device-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
+    localStorage.setItem('holo_device_id', deviceId);
+  }
+  return deviceId;
+}
+
+function showPairingOverlay(errorMsg = '') {
+  const overlay = document.getElementById('pairing-overlay');
+  if (overlay) overlay.classList.remove('hidden');
+  const errEl = document.getElementById('pairing-error');
+  if (errEl) {
+    if (errorMsg) {
+      errEl.textContent = errorMsg;
+      errEl.style.display = 'block';
+    } else {
+      errEl.style.display = 'none';
+    }
+  }
+}
+
 function sendWsCmd(cmd) {
-  HoloWs.send({ cmd });
+  wsSeq++;
+  HoloWs.send({ cmd, seq: wsSeq });
 }
 
 function setConnectionStatus(connected) {
@@ -632,10 +658,27 @@ function setConnectionStatus(connected) {
 }
 
 function connectWebSocket(url) {
+  const token = localStorage.getItem('holo_ws_token');
+  const deviceId = getDeviceId();
+  wsSeq = 0;
+
   HoloWs.connect(
     url,
+    token,
+    deviceId,
     (data) => handleWSEvent(data),
-    (connected) => setConnectionStatus(connected)
+    (connected) => {
+      setConnectionStatus(connected);
+      if (connected) {
+        wsSeq = 0;
+        const overlay = document.getElementById('pairing-overlay');
+        if (overlay) overlay.classList.add('hidden');
+      }
+    },
+    (code, reason) => {
+      setConnectionStatus(false);
+      showPairingOverlay(reason || 'WebSocket authentication failed');
+    }
   );
 }
 
@@ -813,6 +856,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Init simulator
   initSimulator();
+
+  // Pairing Submit Listener
+  const pairingSubmitBtn = document.getElementById('pairing-submit-btn');
+  const pairingPinInput = document.getElementById('pairing-pin-input');
+  const pairingError = document.getElementById('pairing-error');
+
+  if (pairingSubmitBtn) {
+    pairingSubmitBtn.addEventListener('click', async () => {
+      const pin = pairingPinInput.value.trim();
+      if (pin.length !== 6) {
+        pairingError.textContent = 'Please enter a valid 6-digit PIN';
+        pairingError.style.display = 'block';
+        return;
+      }
+      pairingError.style.display = 'none';
+      pairingSubmitBtn.disabled = true;
+      pairingSubmitBtn.textContent = 'VERIFYING...';
+      
+      try {
+        const deviceId = getDeviceId();
+        const apiBase = typeof HoloApi !== 'undefined' ? HoloApi.API_BASE : 'http://127.0.0.1:8081/api';
+        const response = await fetch(`${apiBase}/pairing/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin, device_id: deviceId })
+        });
+        
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.detail || 'Pairing verification failed');
+        }
+        
+        localStorage.setItem('holo_ws_token', data.token);
+        pairingPinInput.value = '';
+        pairingSubmitBtn.disabled = false;
+        pairingSubmitBtn.textContent = 'SUBMIT PAIRING PIN';
+        
+        document.getElementById('pairing-overlay').classList.add('hidden');
+        connectWebSocket(simWsUrlInput.value);
+      } catch (err) {
+        pairingError.textContent = err.message;
+        pairingError.style.display = 'block';
+        pairingSubmitBtn.disabled = false;
+        pairingSubmitBtn.textContent = 'SUBMIT PAIRING PIN';
+      }
+    });
+  }
 
   // Connect to WebSocket (auto)
   setTimeout(() => connectWebSocket(simWsUrlInput.value), 500);

@@ -68,11 +68,12 @@ def decode_refresh_token(token: str) -> dict:
     return payload
 
 
-def create_websocket_session_token(tenant_id: str, kiosk_id: str, expires_in_hours: int = 24) -> str:
+def create_websocket_session_token(tenant_id: str, kiosk_id: str, device_id: str, expires_in_hours: int = 24) -> str:
     expire = datetime.utcnow() + timedelta(hours=expires_in_hours)
     to_encode = {
         "sub": kiosk_id,
         "tenant_id": tenant_id,
+        "device_id": device_id,
         "type": "websocket_session",
         "exp": expire
     }

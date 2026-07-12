@@ -10,12 +10,10 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
 from contextvars import ContextVar
-import time
 from prometheus_client import Counter, Histogram, generate_latest
 
 from backend.infrastructure.logging.json_logger import logger, request_id_ctx
@@ -24,9 +22,7 @@ from backend.infrastructure.monitoring.prometheus import REQUEST_COUNT, REQUEST_
 
 init_sentry()
 
-# JWT/Auth variables not needed in main.py entrypoint
-
-limiter = Limiter(key_func=get_remote_address)
+from backend.infrastructure.security.limiter import limiter
 
 
 
