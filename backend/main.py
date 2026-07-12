@@ -32,7 +32,7 @@ async def get_tenant_by_subdomain(subdomain: str) -> Optional[dict]:
     async with pool.acquire() as conn:
         async with conn.cursor(aiomysql.DictCursor) as cur:
             await cur.execute(
-                "SELECT id, subdomain, status, grace_period_ends_at FROM tenants WHERE subdomain = %s",
+                "SELECT id, subdomain, status, grace_period_ends_at, deleted_at FROM tenants WHERE subdomain = %s",
                 (subdomain,),
             )
             return await cur.fetchone()
@@ -224,7 +224,7 @@ async def tenant_middleware(request: Request, call_next):
     if is_api_route and not path.startswith("/api/health") and not path.startswith("/api/metrics") and not path.startswith("/api/billing/webhook"):
         try:
             tenant = await get_tenant_by_subdomain(tenant_slug)
-            if not tenant:
+            if not tenant or tenant["deleted_at"] is not None:
                 return JSONResponse(
                     status_code=404,
                     content={"detail": f"Tenant '{tenant_slug}' not found."}
