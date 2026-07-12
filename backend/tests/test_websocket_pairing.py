@@ -347,29 +347,45 @@ async def test_websocket_replay_protection_sequence():
 
 
 @pytest.mark.anyio
-async def test_websocket_active_order_desync_reconnect_simulation(conn):
-    token = create_websocket_session_token(
+async def test_websocket_active_order_desync_reconnect_simulation(client: AsyncClient, conn):
+    # Insert chef admin to satisfy audit log/order constraints
+    async with conn.cursor() as cur:
+        await cur.execute(
+            "INSERT IGNORE INTO admins (id, tenant_id, username, password_hash, role) VALUES (%s, %s, %s, %s, %s)",
+            (9999, DEMO_TENANT_ID, "chef_reconnect_test", "hash", "chef")
+        )
+
+    chef_token = create_access_token(DEMO_TENANT_ID, 9999, "chef")
+    headers = {
+        "Authorization": f"Bearer {chef_token}",
+        "X-Tenant": "demo"
+    }
+
+    # 1. Create a real order in the database via the API client
+    resp_create = await client.post("/api/orders", headers=headers)
+    assert resp_create.status_code == 201
+    order = resp_create.json()
+    order_uid = order["order_uid"]
+    assert order["status"] == "pending"
+
+    # Count matching orders in DB initially
+    async with conn.cursor(aiomysql.DictCursor) as cur:
+        await cur.execute("SELECT id, status FROM orders WHERE order_uid = %s", (order_uid,))
+        rows_before = await cur.fetchall()
+        assert len(rows_before) == 1
+        assert rows_before[0]["status"] == "pending"
+
+    # 2. Simulate WebSocket token generation and initial pairing context
+    ws_token = create_websocket_session_token(
         DEMO_TENANT_ID,
         "mock-kiosk-id",
         "device-a",
         expires_in_hours=1
     )
 
-    # Simulate client-side active order variables
-    kiosk_currentState = "STATE.DEPARTMENT_SELECT"
-    kiosk_cart = [{"product_id": 1, "quantity": 2, "price": 180.00}]
-    kiosk_wsSeq = 0
-
-    # 1. Establish connection 1, send start_order (seq=1)
-    ws1 = MockWebSocket(f"/?token={token}&device_id=device-a")
-    kiosk_wsSeq += 1
-    ws1.incoming_messages = [f'{{"cmd": "start_order", "seq": {kiosk_wsSeq}}}']
-    await ws_handler(ws1)
-    assert not ws1.closed
-
-    # 2. Simulate sequence mismatch error (client sends seq=3 instead of 2)
+    # 3. Simulate sequence mismatch error (client sends seq=3 instead of 2)
     # This triggers server disconnect with code 4005
-    ws2 = MockWebSocket(f"/?token={token}&device_id=device-a")
+    ws2 = MockWebSocket(f"/?token={ws_token}&device_id=device-a")
     # Set expected server state to expect seq=2 by sending a valid seq=1 first
     ws2.incoming_messages = [
         '{"cmd": "start_order", "seq": 1}',
@@ -379,22 +395,27 @@ async def test_websocket_active_order_desync_reconnect_simulation(conn):
     assert ws2.closed
     assert ws2.close_code == 4005
 
-    # 3. Reconnect Simulator: Client receives disconnect.
-    # It reconnects with the SAME token & device_id.
-    # It resets wsSeq to 0. It preserves currentState and cart in memory.
-    kiosk_wsSeq = 0
-    ws3 = MockWebSocket(f"/?token={token}&device_id=device-a")
-    
-    # Client sends first command under new socket (seq=1)
-    kiosk_wsSeq += 1
-    ws3.incoming_messages = [f'{{"cmd": "start_order", "seq": {kiosk_wsSeq}}}']
+    # 4. Reconnect Simulator: Client receives disconnect.
+    # It reconnects with the SAME token & device_id, resetting sequence back to 1.
+    ws3 = MockWebSocket(f"/?token={ws_token}&device_id=device-a")
+    ws3.incoming_messages = [
+        '{"cmd": "start_order", "seq": 1}'
+    ]
     await ws_handler(ws3)
     
-    # Assert socket remains open and client state (order/cart) was preserved intact
+    # Assert socket remains open
     assert not ws3.closed
-    assert kiosk_currentState == "STATE.DEPARTMENT_SELECT"
-    assert len(kiosk_cart) == 1
-    assert kiosk_cart[0]["product_id"] == 1
+
+    # 5. Query the actual orders table afterward and assert:
+    # - The same order ID still exists
+    # - Its status is unchanged ("pending")
+    # - No duplicate order was created for this session
+    async with conn.cursor(aiomysql.DictCursor) as cur:
+        await cur.execute("SELECT id, status FROM orders WHERE order_uid = %s", (order_uid,))
+        rows_after = await cur.fetchall()
+        assert len(rows_after) == 1
+        assert rows_after[0]["status"] == "pending"
+        assert rows_after[0]["id"] == rows_before[0]["id"]
 
 
 @pytest.mark.anyio
