@@ -32,7 +32,7 @@ async def get_tenant_by_subdomain(subdomain: str) -> Optional[dict]:
     async with pool.acquire() as conn:
         async with conn.cursor(aiomysql.DictCursor) as cur:
             await cur.execute(
-                "SELECT id, subdomain, status FROM tenants WHERE subdomain = %s",
+                "SELECT id, subdomain, status, grace_period_ends_at FROM tenants WHERE subdomain = %s",
                 (subdomain,),
             )
             return await cur.fetchone()
@@ -48,6 +48,7 @@ from backend.interface.routers.admin import router as admin_router
 from backend.interface.routers.analytics import router as analytics_router
 from backend.interface.routers.events import router as events_router
 from backend.interface.routers.pairing import router as pairing_router
+from backend.interface.routers.billing import router as billing_router
 
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
@@ -104,6 +105,7 @@ app.include_router(admin_router)
 app.include_router(analytics_router)
 app.include_router(events_router)
 app.include_router(pairing_router)
+app.include_router(billing_router)
 
 
 from fastapi import Response
@@ -217,9 +219,9 @@ async def tenant_middleware(request: Request, call_next):
     else:
         tenant_slug = "demo"
 
-    # Health check is system-wide, all other api routes require tenant resolution
+    # Health check and billing webhook are system-wide, all other api routes require tenant resolution
     is_api_route = path.startswith("/api")
-    if is_api_route and not path.startswith("/api/health") and not path.startswith("/api/metrics"):
+    if is_api_route and not path.startswith("/api/health") and not path.startswith("/api/metrics") and not path.startswith("/api/billing/webhook"):
         try:
             tenant = await get_tenant_by_subdomain(tenant_slug)
             if not tenant:
@@ -232,6 +234,13 @@ async def tenant_middleware(request: Request, call_next):
                     status_code=403,
                     content={"detail": f"Tenant '{tenant_slug}' is {tenant['status']}."}
                 )
+            if tenant["grace_period_ends_at"]:
+                from datetime import datetime
+                if datetime.utcnow() > tenant["grace_period_ends_at"]:
+                    return JSONResponse(
+                        status_code=402,
+                        content={"detail": "Subscription past due. Please update payment information."}
+                    )
             request.state.tenant_id = tenant["id"]
             request.state.tenant_slug = tenant_slug
         except Exception as e:

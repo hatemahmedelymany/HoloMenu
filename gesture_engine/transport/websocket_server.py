@@ -139,6 +139,43 @@ async def ws_handler(websocket):
                 await websocket.close(code=4003, reason="Device ID mismatch")
                 return
 
+            # Gating: Query tenant billing status from DB
+            try:
+                conn_billing = await aiomysql.connect(**DB_CONFIG)
+                try:
+                    async with conn_billing.cursor(aiomysql.DictCursor) as cur:
+                        await cur.execute("SELECT status, grace_period_ends_at FROM tenants WHERE id = %s", (tenant_id,))
+                        tenant = await cur.fetchone()
+                        if not tenant or tenant["status"] != "active":
+                            status_val = tenant["status"] if tenant else "not_found"
+                            print(f"WS connection rejected: tenant suspended (status: {status_val})")
+                            await log_ws_audit_event(
+                                tenant_id=tenant_id,
+                                action="ws_connection_failed",
+                                error_msg="Tenant subscription suspended",
+                                device_id=device_id,
+                                kiosk_id=kiosk_id
+                            )
+                            await websocket.close(code=4006, reason="Tenant subscription suspended")
+                            return
+                        if tenant["grace_period_ends_at"]:
+                            from datetime import datetime
+                            if datetime.utcnow() > tenant["grace_period_ends_at"]:
+                                print("WS connection rejected: tenant grace period expired")
+                                await log_ws_audit_event(
+                                    tenant_id=tenant_id,
+                                    action="ws_connection_failed",
+                                    error_msg="Billing grace period expired",
+                                    device_id=device_id,
+                                    kiosk_id=kiosk_id
+                                )
+                                await websocket.close(code=4006, reason="Billing grace period expired")
+                                return
+                finally:
+                    conn_billing.close()
+            except Exception as e:
+                print(f"Failed to query billing status from DB during WS handshake: {e}")
+
             print(f"WS connection authenticated successfully for tenant {tenant_id} / kiosk {kiosk_id} / device {device_id}")
             await log_ws_audit_event(
                 tenant_id=tenant_id,

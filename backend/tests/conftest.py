@@ -8,6 +8,10 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.dirname(__file__)),
 
 import backend.infrastructure.database.pool as db_pool
 from backend.infrastructure.config.settings import DB_CONFIG
+from backend.infrastructure.security.limiter import limiter
+
+# Disable rate limiting for all tests to prevent 429 cross-test pollution
+limiter.enabled = False
 
 @pytest.fixture(autouse=True)
 async def db_pool_setup():
@@ -29,19 +33,28 @@ def mock_tenant_resolver():
     original_resolver = backend.main.get_tenant_by_subdomain
     
     async def mock_resolver(subdomain: str):
+        try:
+            tenant = await original_resolver(subdomain)
+            if tenant:
+                return tenant
+        except Exception:
+            pass
+
         if subdomain == "tenantb":
             return {
                 "id": "b4444444-4444-4444-4444-444444444444",
                 "subdomain": "tenantb",
-                "status": "active"
+                "status": "active",
+                "grace_period_ends_at": None
             }
         if subdomain == "demo":
             return {
                 "id": "d4444444-4444-4444-4444-444444444444",
                 "subdomain": "demo",
-                "status": "active"
+                "status": "active",
+                "grace_period_ends_at": None
             }
-        return await original_resolver(subdomain)
+        return None
         
     backend.main.get_tenant_by_subdomain = mock_resolver
     yield

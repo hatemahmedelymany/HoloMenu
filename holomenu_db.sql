@@ -19,6 +19,7 @@ CREATE TABLE `tenants` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `plan_tier` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'starter',
   `max_kiosks` int(11) NOT NULL DEFAULT 1,
+  `grace_period_ends_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `subdomain` (`subdomain`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -220,6 +221,13 @@ CREATE TABLE `websocket_sessions` (
   KEY `kiosk_id` (`kiosk_id`),
   CONSTRAINT `websocket_sessions_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`) ON DELETE CASCADE,
   CONSTRAINT `websocket_sessions_ibfk_2` FOREIGN KEY (`kiosk_id`) REFERENCES `kiosks` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ─── STRIPE_PROCESSED_EVENTS ───
+CREATE TABLE `stripe_processed_events` (
+  `event_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `processed_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`event_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ─── SEED DATA ───────────────────────────────────────────────────────────────
