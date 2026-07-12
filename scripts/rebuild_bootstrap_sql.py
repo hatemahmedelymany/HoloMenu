@@ -54,12 +54,14 @@ def main():
         "departments",
         "products",
         "orders",
+        "kiosks",
         "order_items",
         "analytics_events",
         "admins",
         "refresh_tokens",
         "audit_logs",
-        "payments"
+        "payments",
+        "websocket_sessions"
     ]
     
     schema_parts = []
