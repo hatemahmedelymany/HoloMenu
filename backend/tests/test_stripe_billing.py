@@ -231,41 +231,83 @@ async def test_stripe_webhook_subscription_lifecycle(client: AsyncClient, conn):
 
 @pytest.mark.anyio
 async def test_stripe_webhook_lazy_gating(client: AsyncClient, conn):
-    # Set demo tenant status to active but grace_period_ends_at to 5 minutes ago (expired)
-    expired_time = datetime.utcnow() - timedelta(minutes=5)
-    async with conn.cursor() as cur:
-        await cur.execute(
-            "UPDATE tenants SET plan = 'pro', status = 'active', grace_period_ends_at = %s WHERE id = %s",
-            (expired_time, DEMO_TENANT_ID)
-        )
-    await conn.commit()
-
-    # 1. HTTP Endpoint Gating Check -> returns 402 Payment Required
     headers = {"X-Tenant": "demo"}
-    res = await client.get("/api/departments", headers=headers)
-    assert res.status_code == 402
-    assert "Subscription past due" in res.json()["detail"]
 
-    # 2. WebSocket Gating Check -> close code 4006
-    token = create_websocket_session_token(
-        DEMO_TENANT_ID,
-        "mock-kiosk-id",
-        "device-a",
-        expires_in_hours=1
-    )
-    ws = MockWebSocket(f"/?token={token}&device_id=device-a")
-    await ws_handler(ws)
-    assert ws.closed
-    assert ws.close_code == 4006
-    assert ws.close_reason == "Billing grace period expired"
+    # 1. Create a real order while the tenant is active (no billing issues)
+    resp_order = await client.post("/api/orders", headers=headers)
+    assert resp_order.status_code == 201
+    order = resp_order.json()
+    order_uid = order["order_uid"]
 
-    # Reset tenant for subsequent tests
-    async with conn.cursor() as cur:
-        await cur.execute(
-            "UPDATE tenants SET plan = 'starter', status = 'active', grace_period_ends_at = NULL WHERE id = %s",
-            (DEMO_TENANT_ID,)
+    # Fetch auto-increment ID of the order from the database
+    async with conn.cursor(aiomysql.DictCursor) as cur:
+        await cur.execute("SELECT id FROM orders WHERE order_uid = %s", (order_uid,))
+        order_row = await cur.fetchone()
+        order_id = order_row["id"]
+
+    try:
+        # 2. Lock the tenant: Set grace_period_ends_at to 5 minutes ago (expired)
+        expired_time = datetime.utcnow() - timedelta(minutes=5)
+        async with conn.cursor() as cur:
+            await cur.execute(
+                "UPDATE tenants SET plan = 'pro', status = 'active', grace_period_ends_at = %s WHERE id = %s",
+                (expired_time, DEMO_TENANT_ID)
+            )
+        await conn.commit()
+
+        # 3. Verify that normal endpoints (menu browsing) are blocked with 402
+        res = await client.get("/api/departments", headers=headers)
+        assert res.status_code == 402
+        assert "Subscription past due" in res.json()["detail"]
+
+        # 4. Verify that new order creation is blocked with 402
+        res_new_order = await client.post("/api/orders", headers=headers)
+        assert res_new_order.status_code == 402
+
+        # 5. Verify that in-flight order status update (by chef) is EXEMPT and succeeds
+        # Look up seeded admin ID from DB to avoid foreign key integrity constraint failures on audit log user_id
+        async with conn.cursor(aiomysql.DictCursor) as cur:
+            await cur.execute("SELECT id FROM admins WHERE username = 'admin'")
+            admin_row = await cur.fetchone()
+            seeded_admin_id = admin_row["id"]
+
+        chef_token = create_access_token(DEMO_TENANT_ID, seeded_admin_id, "chef")
+        headers_chef = {"Authorization": f"Bearer {chef_token}", "X-Tenant": "demo"}
+        res_status = await client.post(
+            f"/api/orders/{order_id}/status",
+            json={"status": "confirmed"},
+            headers=headers_chef
         )
-    await conn.commit()
+        assert res_status.status_code == 200
+
+        # 6. Verify that in-flight order cancellation (by customer) is EXEMPT and succeeds
+        res_cancel = await client.post(
+            f"/api/orders/{order_uid}/cancel",
+            headers=headers
+        )
+        assert res_cancel.status_code == 200
+
+        # 7. WebSocket Gating Check -> close code 4006
+        token = create_websocket_session_token(
+            DEMO_TENANT_ID,
+            "mock-kiosk-id",
+            "device-a",
+            expires_in_hours=1
+        )
+        ws = MockWebSocket(f"/?token={token}&device_id=device-a")
+        await ws_handler(ws)
+        assert ws.closed
+        assert ws.close_code == 4006
+        assert ws.close_reason == "Billing grace period expired"
+
+    finally:
+        # Reset tenant for subsequent tests
+        async with conn.cursor() as cur:
+            await cur.execute(
+                "UPDATE tenants SET plan = 'starter', status = 'active', grace_period_ends_at = NULL WHERE id = %s",
+                (DEMO_TENANT_ID,)
+            )
+        await conn.commit()
 
 
 @pytest.mark.anyio

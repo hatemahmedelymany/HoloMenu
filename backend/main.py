@@ -198,6 +198,21 @@ async def security_headers_middleware(request: Request, call_next):
     return response
 
 
+def is_exempt_from_billing_gating(path: str, method: str) -> bool:
+    """Option A: Exempt order completion/lifecycle endpoints from billing blocks so in-flight orders aren't stranded."""
+    if path == "/api/chef/orders" and method == "GET":
+        return True
+    if path == "/api/cashier/orders" and method == "GET":
+        return True
+    
+    parts = [p for p in path.split("/") if p]
+    if len(parts) == 4 and parts[0] == "api" and parts[1] == "orders" and method == "POST":
+        action = parts[3]
+        if action in ("status", "pay", "cancel"):
+            return True
+    return False
+
+
 @app.middleware("http")
 async def tenant_middleware(request: Request, call_next):
     path = request.url.path
@@ -237,10 +252,11 @@ async def tenant_middleware(request: Request, call_next):
             if tenant["grace_period_ends_at"]:
                 from datetime import datetime
                 if datetime.utcnow() > tenant["grace_period_ends_at"]:
-                    return JSONResponse(
-                        status_code=402,
-                        content={"detail": "Subscription past due. Please update payment information."}
-                    )
+                    if not is_exempt_from_billing_gating(path, request.method):
+                        return JSONResponse(
+                            status_code=402,
+                            content={"detail": "Subscription past due. Please update payment information."}
+                        )
             request.state.tenant_id = tenant["id"]
             request.state.tenant_slug = tenant_slug
         except Exception as e:

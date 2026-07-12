@@ -144,12 +144,11 @@ async def ws_handler(websocket):
                 conn_billing = await aiomysql.connect(**DB_CONFIG)
                 try:
                     async with conn_billing.cursor(aiomysql.DictCursor) as cur:
-                        await cur.execute("SELECT status, grace_period_ends_at, deleted_at FROM tenants WHERE id = %s", (tenant_id,))
+                        await cur.execute("SELECT status, grace_period_ends_at FROM tenants WHERE id = %s", (tenant_id,))
                         tenant = await cur.fetchone()
-                        if not tenant or tenant["status"] != "active" or tenant["deleted_at"] is not None:
+                        if not tenant or tenant["status"] != "active":
                             status_val = tenant["status"] if tenant else "not_found"
-                            is_deleted = tenant["deleted_at"] is not None if tenant else False
-                            print(f"WS connection rejected: tenant suspended or deactivated (status: {status_val}, deleted: {is_deleted})")
+                            print(f"WS connection rejected: tenant suspended (status: {status_val})")
                             await log_ws_audit_event(
                                 tenant_id=tenant_id,
                                 action="ws_connection_failed",

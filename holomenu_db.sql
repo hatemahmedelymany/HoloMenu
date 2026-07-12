@@ -20,7 +20,6 @@ CREATE TABLE `tenants` (
   `plan_tier` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'starter',
   `max_kiosks` int(11) NOT NULL DEFAULT 1,
   `grace_period_ends_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `subdomain` (`subdomain`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
