@@ -67,13 +67,14 @@ class OrderUseCases:
             raise ProductUnavailableError("Product is not available")
 
         # Upsert line item
-        existing = await self.order_repo.get_item(order["id"], product_id)
+        # Upsert line item
+        existing = await self.order_repo.get_item(tenant_id, order["id"], product_id)
         if existing:
             new_qty = existing["quantity"] + quantity
-            await self.order_repo.update_item_quantity(order["id"], product_id, new_qty)
+            await self.order_repo.update_item_quantity(tenant_id, order["id"], product_id, new_qty)
         else:
             price = float(product["price"])
-            await self.order_repo.add_item(order["id"], product_id, quantity, price)
+            await self.order_repo.add_item(tenant_id, order["id"], product_id, quantity, price)
 
         return {"status": "item_added"}
 
@@ -92,18 +93,18 @@ class OrderUseCases:
             raise ProductNotFoundError("Product not found")
 
         if quantity <= 0:
-            await self.order_repo.remove_item(order["id"], product_id)
+            await self.order_repo.remove_item(tenant_id, order["id"], product_id)
         else:
-            existing = await self.order_repo.get_item(order["id"], product_id)
+            existing = await self.order_repo.get_item(tenant_id, order["id"], product_id)
             if not existing:
                 # Add item if it wasn't already in the order
                 if not product.get("available", True):
                     raise ProductUnavailableError("Product is not available")
                 await self.order_repo.add_item(
-                    order["id"], product_id, quantity, float(product["price"])
+                    tenant_id, order["id"], product_id, quantity, float(product["price"])
                 )
             else:
-                await self.order_repo.update_item_quantity(order["id"], product_id, quantity)
+                await self.order_repo.update_item_quantity(tenant_id, order["id"], product_id, quantity)
 
         return {"status": "item_updated"}
 
@@ -120,7 +121,7 @@ class OrderUseCases:
 
         assert_valid_transition(order["status"], "confirmed")
 
-        items = await self.order_repo.get_order_items(order["id"])
+        items = await self.order_repo.get_order_items(tenant_id, order["id"])
         total = sum(float(item["unit_price"]) * item["quantity"] for item in items)
 
         # Set status and price

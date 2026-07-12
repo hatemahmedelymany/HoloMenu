@@ -23,27 +23,27 @@ class OrderRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_item(self, order_id: int, product_id: int) -> Optional[dict]:
+    async def get_item(self, tenant_id: str, order_id: int, product_id: int) -> Optional[dict]:
         """Get specific order item details."""
         pass
 
     @abstractmethod
-    async def add_item(self, order_id: int, product_id: int, quantity: int, unit_price: float) -> None:
+    async def add_item(self, tenant_id: str, order_id: int, product_id: int, quantity: int, unit_price: float) -> None:
         """Insert a new item line into order_items."""
         pass
 
     @abstractmethod
-    async def update_item_quantity(self, order_id: int, product_id: int, quantity: int) -> None:
+    async def update_item_quantity(self, tenant_id: str, order_id: int, product_id: int, quantity: int) -> None:
         """Update the quantity of an existing item line."""
         pass
 
     @abstractmethod
-    async def remove_item(self, order_id: int, product_id: int) -> None:
+    async def remove_item(self, tenant_id: str, order_id: int, product_id: int) -> None:
         """Delete an item line from order_items."""
         pass
 
     @abstractmethod
-    async def get_order_items(self, order_id: int) -> List[Dict]:
+    async def get_order_items(self, tenant_id: str, order_id: int) -> List[Dict]:
         """Fetch all item rows with product meta (name, etc.) for an order."""
         pass
 

@@ -36,44 +36,44 @@ class MysqlOrderRepo(OrderRepository):
             )
             return await cur.fetchone()
 
-    async def get_item(self, order_id: int, product_id: int) -> Optional[dict]:
+    async def get_item(self, tenant_id: str, order_id: int, product_id: int) -> Optional[dict]:
         async with self.conn.cursor(aiomysql.DictCursor) as cur:
             await cur.execute(
-                "SELECT id, quantity FROM order_items WHERE order_id = %s AND product_id = %s",
-                (order_id, product_id)
+                "SELECT id, quantity FROM order_items WHERE tenant_id = %s AND order_id = %s AND product_id = %s",
+                (tenant_id, order_id, product_id)
             )
             return await cur.fetchone()
 
-    async def add_item(self, order_id: int, product_id: int, quantity: int, unit_price: float) -> None:
+    async def add_item(self, tenant_id: str, order_id: int, product_id: int, quantity: int, unit_price: float) -> None:
         async with self.conn.cursor() as cur:
             await cur.execute(
-                """INSERT INTO order_items (order_id, product_id, quantity, unit_price)
-                   VALUES (%s, %s, %s, %s)""",
-                (order_id, product_id, quantity, unit_price)
+                """INSERT INTO order_items (tenant_id, order_id, product_id, quantity, unit_price)
+                   VALUES (%s, %s, %s, %s, %s)""",
+                (tenant_id, order_id, product_id, quantity, unit_price)
             )
 
-    async def update_item_quantity(self, order_id: int, product_id: int, quantity: int) -> None:
+    async def update_item_quantity(self, tenant_id: str, order_id: int, product_id: int, quantity: int) -> None:
         async with self.conn.cursor() as cur:
             await cur.execute(
-                "UPDATE order_items SET quantity = %s WHERE order_id = %s AND product_id = %s",
-                (quantity, order_id, product_id)
+                "UPDATE order_items SET quantity = %s WHERE tenant_id = %s AND order_id = %s AND product_id = %s",
+                (quantity, tenant_id, order_id, product_id)
             )
 
-    async def remove_item(self, order_id: int, product_id: int) -> None:
+    async def remove_item(self, tenant_id: str, order_id: int, product_id: int) -> None:
         async with self.conn.cursor() as cur:
             await cur.execute(
-                "DELETE FROM order_items WHERE order_id = %s AND product_id = %s",
-                (order_id, product_id)
+                "DELETE FROM order_items WHERE tenant_id = %s AND order_id = %s AND product_id = %s",
+                (tenant_id, order_id, product_id)
             )
 
-    async def get_order_items(self, order_id: int) -> List[Dict]:
+    async def get_order_items(self, tenant_id: str, order_id: int) -> List[Dict]:
         async with self.conn.cursor(aiomysql.DictCursor) as cur:
             await cur.execute(
                 """SELECT oi.product_id, oi.quantity, oi.unit_price, p.name_en, p.name_ar
                    FROM order_items oi
                    JOIN products p ON oi.product_id = p.id
-                   WHERE oi.order_id = %s""",
-                (order_id,)
+                   WHERE oi.tenant_id = %s AND oi.order_id = %s""",
+                (tenant_id, order_id)
             )
             rows = await cur.fetchall()
             for r in rows:
@@ -232,8 +232,8 @@ class MysqlOrderRepo(OrderRepository):
                 f"""SELECT oi.order_id, oi.product_id, oi.quantity, p.name_en, p.name_ar, oi.unit_price
                     FROM order_items oi
                     JOIN products p ON oi.product_id = p.id
-                    WHERE oi.order_id IN ({format_strings})""",
-                tuple(order_ids)
+                    WHERE oi.tenant_id = %s AND oi.order_id IN ({format_strings})""",
+                tuple([tenant_id] + list(order_ids))
             )
             items = await cur.fetchall()
             for r in items:
