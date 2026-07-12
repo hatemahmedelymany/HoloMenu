@@ -348,20 +348,11 @@ async def test_websocket_replay_protection_sequence():
 
 @pytest.mark.anyio
 async def test_websocket_active_order_desync_reconnect_simulation(client: AsyncClient, conn):
-    # Insert chef admin to satisfy audit log/order constraints
-    async with conn.cursor() as cur:
-        await cur.execute(
-            "INSERT IGNORE INTO admins (id, tenant_id, username, password_hash, role) VALUES (%s, %s, %s, %s, %s)",
-            (9999, DEMO_TENANT_ID, "chef_reconnect_test", "hash", "chef")
-        )
-
-    chef_token = create_access_token(DEMO_TENANT_ID, 9999, "chef")
     headers = {
-        "Authorization": f"Bearer {chef_token}",
         "X-Tenant": "demo"
     }
 
-    # 1. Create a real order in the database via the API client
+    # 1. Create a real order in the database via the kiosk-facing unauthenticated API client
     resp_create = await client.post("/api/orders", headers=headers)
     assert resp_create.status_code == 201
     order = resp_create.json()
@@ -384,16 +375,24 @@ async def test_websocket_active_order_desync_reconnect_simulation(client: AsyncC
     )
 
     # 3. Simulate sequence mismatch error (client sends seq=3 instead of 2)
-    # This triggers server disconnect with code 4005
-    ws2 = MockWebSocket(f"/?token={ws_token}&device_id=device-a")
-    # Set expected server state to expect seq=2 by sending a valid seq=1 first
-    ws2.incoming_messages = [
-        '{"cmd": "start_order", "seq": 1}',
-        '{"cmd": "end_session", "seq": 3}' # gap! expected 2
-    ]
-    await ws_handler(ws2)
-    assert ws2.closed
-    assert ws2.close_code == 4005
+    # This triggers server disconnect with code 4005.
+    # We spy on OrderUseCases.cancel_order to verify it is never called.
+    from unittest.mock import patch
+    from backend.application.use_cases.orders import OrderUseCases
+
+    with patch.object(OrderUseCases, "cancel_order", wraps=OrderUseCases.cancel_order) as mock_cancel:
+        ws2 = MockWebSocket(f"/?token={ws_token}&device_id=device-a")
+        # Set expected server state to expect seq=2 by sending a valid seq=1 first
+        ws2.incoming_messages = [
+            '{"cmd": "start_order", "seq": 1}',
+            '{"cmd": "end_session", "seq": 3}' # gap! expected 2
+        ]
+        await ws_handler(ws2)
+        assert ws2.closed
+        assert ws2.close_code == 4005
+        
+        # Verify the cancellation use case was never invoked
+        mock_cancel.assert_not_called()
 
     # 4. Reconnect Simulator: Client receives disconnect.
     # It reconnects with the SAME token & device_id, resetting sequence back to 1.
