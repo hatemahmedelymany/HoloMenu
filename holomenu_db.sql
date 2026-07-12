@@ -1,5 +1,5 @@
 -- HoloMenu Database Schema
--- Synchronized with Alembic migrations 0001 to 0005 (Phase 3 Baseline)
+-- Synchronized with Alembic migrations at head (SaaS Readiness Baseline)
 -- Run: mysql -u holomenu_app -p < holomenu_db.sql
 
 CREATE DATABASE IF NOT EXISTS holomenu_db
@@ -8,151 +8,185 @@ CREATE DATABASE IF NOT EXISTS holomenu_db
 
 USE holomenu_db;
 
--- ─── TENANTS ─────────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS tenants (
-  id         CHAR(36) PRIMARY KEY,
-  name       VARCHAR(255) NOT NULL,
-  subdomain  VARCHAR(63) UNIQUE NOT NULL,
-  plan       ENUM('trial','starter','pro','enterprise') NOT NULL DEFAULT 'trial',
-  status     ENUM('active','suspended','cancelled') NOT NULL DEFAULT 'active',
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- ─── TENANTS ───
+CREATE TABLE `tenants` (
+  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subdomain` varchar(63) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `plan` enum('trial','starter','pro','enterprise') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'trial',
+  `status` enum('active','suspended','cancelled') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `subdomain` (`subdomain`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ─── DEPARTMENTS ────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS departments (
-  id            INT PRIMARY KEY AUTO_INCREMENT,
-  tenant_id     CHAR(36) NOT NULL,
-  name_en       VARCHAR(100) NOT NULL,
-  name_ar       VARCHAR(100) NOT NULL,
-  icon_path     VARCHAR(255) DEFAULT NULL,
-  display_order INT          NOT NULL DEFAULT 0,
-  active        BOOLEAN      NOT NULL DEFAULT TRUE,
-  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE RESTRICT
+-- ─── DEPARTMENTS ───
+CREATE TABLE `departments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name_en` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name_ar` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `tenant_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_departments_tenant_active_order` (`tenant_id`,`active`,`display_order`),
+  CONSTRAINT `fk_departments_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ─── PRODUCTS ───────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS products (
-  id              INT PRIMARY KEY AUTO_INCREMENT,
-  tenant_id       CHAR(36) NOT NULL,
-  department_id   INT          NOT NULL,
-  name_en         VARCHAR(150) NOT NULL,
-  name_ar         VARCHAR(150) NOT NULL,
-  description_en  TEXT,
-  description_ar  TEXT,
-  price           DECIMAL(10,2) NOT NULL,
-  currency        VARCHAR(10)  NOT NULL DEFAULT 'EGP',
-  ingredients     JSON,
-  calories        INT          DEFAULT 0,
-  allergens       JSON,
-  media_type      ENUM('image','video','3d_model') DEFAULT 'image',
-  media_path      VARCHAR(255),
-  thumbnail_path  VARCHAR(255),
-  available       BOOLEAN      NOT NULL DEFAULT TRUE,
-  featured        BOOLEAN      NOT NULL DEFAULT FALSE,
-  qr_order_url    VARCHAR(512),
-  created_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP,
-  updated_at      TIMESTAMP    DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE RESTRICT,
-  FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE RESTRICT
+-- ─── PRODUCTS ───
+CREATE TABLE `products` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `department_id` int(11) NOT NULL,
+  `name_en` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name_ar` varchar(150) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description_en` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description_ar` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `currency` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'EGP',
+  `ingredients` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`ingredients`)),
+  `calories` int(11) DEFAULT 0,
+  `allergens` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`allergens`)),
+  `media_type` enum('image','video','3d_model') COLLATE utf8mb4_unicode_ci DEFAULT 'image',
+  `media_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `thumbnail_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `available` tinyint(1) NOT NULL DEFAULT 1,
+  `featured` tinyint(1) NOT NULL DEFAULT 0,
+  `qr_order_url` varchar(512) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `tenant_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `department_id` (`department_id`),
+  KEY `idx_products_tenant_available` (`tenant_id`,`available`),
+  CONSTRAINT `fk_products_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`),
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ─── ORDERS ─────────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS orders (
-  id           INT PRIMARY KEY AUTO_INCREMENT,
-  tenant_id    CHAR(36) NOT NULL,
-  order_uid    VARCHAR(64) UNIQUE NOT NULL,
-  status       ENUM('pending','cooking','ready','completed','cancelled','expired') NOT NULL DEFAULT 'pending',
-  total_price  DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-  started_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  completed_at TIMESTAMP NULL DEFAULT NULL,
-  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE RESTRICT
+-- ─── ORDERS ───
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_uid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('pending','confirmed','cooking','ready','completed','cancelled','expired') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `total_price` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `started_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `completed_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `tenant_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_uid` (`order_uid`),
+  KEY `idx_orders_tenant_status` (`tenant_id`,`status`),
+  CONSTRAINT `fk_orders_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ─── ORDER ITEMS ────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS order_items (
-  id          INT PRIMARY KEY AUTO_INCREMENT,
-  order_id    INT          NOT NULL,
-  product_id  INT          NOT NULL,
-  quantity    INT          NOT NULL DEFAULT 1,
-  unit_price  DECIMAL(10,2) NOT NULL,
-  FOREIGN KEY (order_id)   REFERENCES orders(id)   ON DELETE CASCADE,
-  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE RESTRICT
+-- ─── ORDER_ITEMS ───
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1 CHECK (`quantity` > 0),
+  `unit_price` decimal(10,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `tenant_id` varchar(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_order_product` (`order_id`,`product_id`),
+  KEY `product_id` (`product_id`),
+  KEY `idx_order_items_tenant_order` (`tenant_id`,`order_id`),
+  CONSTRAINT `fk_order_items_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`),
+  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ─── ANALYTICS EVENTS ───────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS analytics_events (
-  id            BIGINT PRIMARY KEY AUTO_INCREMENT,
-  tenant_id     CHAR(36) NOT NULL,
-  event_type    VARCHAR(50) NOT NULL,
-  product_id    INT NULL,
-  department_id INT NULL,
-  session_uid   VARCHAR(64) NOT NULL,
-  meta          JSON NULL,
-  created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE RESTRICT
+-- ─── ANALYTICS_EVENTS ───
+CREATE TABLE `analytics_events` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `event_type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `department_id` int(11) DEFAULT NULL,
+  `session_uid` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `meta` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`meta`)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `tenant_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_id` (`product_id`),
+  KEY `department_id` (`department_id`),
+  KEY `fk_analytics_events_tenant` (`tenant_id`),
+  CONSTRAINT `analytics_events_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `analytics_events_ibfk_2` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_analytics_events_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ─── ADMINS ─────────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS admins (
-  id            INT PRIMARY KEY AUTO_INCREMENT,
-  tenant_id     CHAR(36) NOT NULL,
-  username      VARCHAR(50) UNIQUE NOT NULL,
-  password_hash VARCHAR(255) NOT NULL,
-  role          ENUM('owner', 'admin', 'chef', 'cashier') NOT NULL DEFAULT 'chef',
-  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE RESTRICT
+-- ─── ADMINS ───
+CREATE TABLE `admins` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('owner','admin','chef','cashier') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'chef',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `tenant_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  KEY `fk_admins_tenant` (`tenant_id`),
+  CONSTRAINT `fk_admins_tenant` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ─── REFRESH TOKENS ─────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS refresh_tokens (
-  id         INT PRIMARY KEY AUTO_INCREMENT,
-  tenant_id  CHAR(36) NOT NULL,
-  admin_id   INT NOT NULL,
-  token      VARCHAR(512) UNIQUE NOT NULL,
-  expires_at TIMESTAMP NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE RESTRICT,
-  FOREIGN KEY (admin_id)  REFERENCES admins(id) ON DELETE CASCADE
+-- ─── REFRESH_TOKENS ───
+CREATE TABLE `refresh_tokens` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tenant_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `token` varchar(512) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `expires_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token` (`token`),
+  KEY `tenant_id` (`tenant_id`),
+  KEY `admin_id` (`admin_id`),
+  KEY `idx_refresh_tokens_lookup` (`token`(191)),
+  CONSTRAINT `refresh_tokens_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`),
+  CONSTRAINT `refresh_tokens_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ─── AUDIT LOGS ─────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS audit_logs (
-  id            BIGINT PRIMARY KEY AUTO_INCREMENT,
-  tenant_id     CHAR(36) NOT NULL,
-  user_id       INT NULL,
-  action        VARCHAR(64) NOT NULL,
-  target_type   VARCHAR(64) NOT NULL,
-  target_id     VARCHAR(64) NULL,
-  before_state  JSON NULL,
-  after_state   JSON NULL,
-  ip_address    VARCHAR(45) NULL,
-  user_agent    VARCHAR(255) NULL,
-  created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE RESTRICT,
-  FOREIGN KEY (user_id) REFERENCES admins(id) ON DELETE SET NULL
+-- ─── AUDIT_LOGS ───
+CREATE TABLE `audit_logs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tenant_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `action` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `target_type` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `target_id` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `before_state` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`before_state`)),
+  `after_state` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`after_state`)),
+  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `idx_audit_tenant_time` (`tenant_id`,`created_at`),
+  CONSTRAINT `audit_logs_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`),
+  CONSTRAINT `audit_logs_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `admins` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ─── PAYMENTS ───────────────────────────────────────────────────────────────
-CREATE TABLE IF NOT EXISTS payments (
-  id             BIGINT PRIMARY KEY AUTO_INCREMENT,
-  tenant_id      CHAR(36) NOT NULL,
-  order_id       INT NOT NULL,
-  payment_method VARCHAR(32) NOT NULL,
-  amount_tendered DECIMAL(10,2) NULL,
-  amount_paid    DECIMAL(10,2) NOT NULL,
-  created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE RESTRICT,
-  FOREIGN KEY (order_id)  REFERENCES orders(id) ON DELETE RESTRICT
+-- ─── PAYMENTS ───
+CREATE TABLE `payments` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tenant_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `payment_method` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `amount_tendered` decimal(10,2) DEFAULT NULL,
+  `amount_paid` decimal(10,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_payments_tenant` (`tenant_id`),
+  KEY `idx_payments_order` (`order_id`),
+  CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`tenant_id`) REFERENCES `tenants` (`id`),
+  CONSTRAINT `payments_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ─── INDEXES ─────────────────────────────────────────────────────────────────
-CREATE INDEX idx_orders_tenant_status ON orders (tenant_id, status);
-CREATE INDEX idx_products_tenant_available ON products (tenant_id, available);
-CREATE INDEX idx_departments_tenant_active_order ON departments (tenant_id, active, display_order);
-CREATE INDEX idx_refresh_tokens_lookup ON refresh_tokens (token(191));
-CREATE INDEX idx_audit_tenant_time ON audit_logs (tenant_id, created_at);
-CREATE INDEX idx_payments_tenant ON payments (tenant_id);
-CREATE INDEX idx_payments_order ON payments (order_id);
 
 -- ─── SEED DATA ───────────────────────────────────────────────────────────────
 
