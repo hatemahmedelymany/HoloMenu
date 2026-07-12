@@ -380,7 +380,13 @@ async def test_websocket_active_order_desync_reconnect_simulation(client: AsyncC
     from unittest.mock import patch
     from backend.application.use_cases.orders import OrderUseCases
 
-    with patch.object(OrderUseCases, "cancel_order", wraps=OrderUseCases.cancel_order) as mock_cancel:
+    original_cancel = OrderUseCases.cancel_order
+    cancel_calls = []
+    async def spy_cancel(self, *args, **kwargs):
+        cancel_calls.append((args, kwargs))
+        return await original_cancel(self, *args, **kwargs)
+
+    with patch.object(OrderUseCases, "cancel_order", spy_cancel):
         ws2 = MockWebSocket(f"/?token={ws_token}&device_id=device-a")
         # Set expected server state to expect seq=2 by sending a valid seq=1 first
         ws2.incoming_messages = [
@@ -392,7 +398,7 @@ async def test_websocket_active_order_desync_reconnect_simulation(client: AsyncC
         assert ws2.close_code == 4005
         
         # Verify the cancellation use case was never invoked
-        mock_cancel.assert_not_called()
+        assert len(cancel_calls) == 0
 
     # 4. Reconnect Simulator: Client receives disconnect.
     # It reconnects with the SAME token & device_id, resetting sequence back to 1.
@@ -415,6 +421,58 @@ async def test_websocket_active_order_desync_reconnect_simulation(client: AsyncC
         assert len(rows_after) == 1
         assert rows_after[0]["status"] == "pending"
         assert rows_after[0]["id"] == rows_before[0]["id"]
+
+
+@pytest.mark.anyio
+async def test_websocket_active_order_normal_session_end(client: AsyncClient, conn):
+    headers = {
+        "X-Tenant": "demo"
+    }
+
+    # 1. Create a real order in the database
+    resp_create = await client.post("/api/orders", headers=headers)
+    assert resp_create.status_code == 201
+    order = resp_create.json()
+    order_uid = order["order_uid"]
+
+    ws_token = create_websocket_session_token(
+        DEMO_TENANT_ID,
+        "mock-kiosk-id",
+        "device-a",
+        expires_in_hours=1
+    )
+
+    # 2. Normal sequence of commands processed correctly by the WebSocket server
+    ws = MockWebSocket(f"/?token={ws_token}&device_id=device-a")
+    ws.incoming_messages = [
+        '{"cmd": "start_order", "seq": 1}',
+        '{"cmd": "end_session", "seq": 2}'
+    ]
+    await ws_handler(ws)
+    assert not ws.closed
+
+    # 3. Simulate client calling cancel API (order-cancellation endpoint) as it does when session ends normally
+    from unittest.mock import patch
+    from backend.application.use_cases.orders import OrderUseCases
+
+    original_cancel = OrderUseCases.cancel_order
+    cancel_calls = []
+    async def spy_cancel(self, *args, **kwargs):
+        cancel_calls.append((args, kwargs))
+        return await original_cancel(self, *args, **kwargs)
+
+    with patch.object(OrderUseCases, "cancel_order", spy_cancel):
+        resp_cancel = await client.post(f"/api/orders/{order_uid}/cancel", headers=headers)
+        assert resp_cancel.status_code == 200
+        
+        # Verify the cancellation use case WAS invoked successfully
+        assert len(cancel_calls) == 1
+
+    # 4. Verify order status in DB is now "cancelled"
+    async with conn.cursor(aiomysql.DictCursor) as cur:
+        await cur.execute("SELECT status FROM orders WHERE order_uid = %s", (order_uid,))
+        row = await cur.fetchone()
+        assert row["status"] == "cancelled"
 
 
 @pytest.mark.anyio
