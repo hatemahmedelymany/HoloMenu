@@ -141,8 +141,8 @@ async def test_tenant_purge_pipeline(client: AsyncClient, conn):
         # Tenants (backdated deleted_at to 31 days ago)
         deleted_time = datetime.utcnow() - timedelta(days=31)
         await cur.execute(
-            "INSERT INTO tenants (id, name, subdomain, plan, status, deleted_at) VALUES (%s, %s, %s, %s, %s, %s)",
-            (OFFBOARD_TENANT_ID, "Offboard Purge Restaurant", OFFBOARD_SUBDOMAIN, "starter", "cancelled", deleted_time)
+            "INSERT INTO tenants (id, name, subdomain, plan, status, deleted_at, legal_business_name) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+            (OFFBOARD_TENANT_ID, "Offboard Purge Restaurant", OFFBOARD_SUBDOMAIN, "starter", "cancelled", deleted_time, "Offboard Legal Entity Inc.")
         )
         # Departments & Products
         await cur.execute(
@@ -230,14 +230,15 @@ async def test_tenant_purge_pipeline(client: AsyncClient, conn):
 
     # 4. Assert compliance/financial tables STILL exist and are preserved/anonymized
     async with conn.cursor(aiomysql.DictCursor) as cur:
-        # tenants: name is Deleted Tenant, subdomain is changed, status cancelled, deleted_at NULL
-        await cur.execute("SELECT name, subdomain, status, deleted_at FROM tenants WHERE id = %s", (OFFBOARD_TENANT_ID,))
+        # tenants: name is Deleted Tenant, subdomain is changed, status cancelled, deleted_at is preserved NOT NULL
+        await cur.execute("SELECT name, subdomain, status, deleted_at, legal_business_name FROM tenants WHERE id = %s", (OFFBOARD_TENANT_ID,))
         row = await cur.fetchone()
         assert row is not None
         assert row["name"] == "Deleted Tenant"
         assert row["subdomain"] == f"deleted-{OFFBOARD_TENANT_ID[:8]}"
         assert row["status"] == "cancelled"
-        assert row["deleted_at"] is None
+        assert row["deleted_at"] is not None
+        assert row["legal_business_name"] == "Offboard Legal Entity Inc."
 
         # orders: completed order record still exists
         await cur.execute("SELECT COUNT(*) as count FROM orders WHERE tenant_id = %s", (OFFBOARD_TENANT_ID,))
